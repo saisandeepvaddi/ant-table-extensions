@@ -3,6 +3,7 @@ import {Table} from '../src';
 import {TableProps} from 'antd/lib/table';
 
 export default {
+  component: Table,
   title: 'Table',
 };
 
