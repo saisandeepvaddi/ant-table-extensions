@@ -1,33 +1,34 @@
-import React from 'react';
-import {Table} from '../src';
-import {TableProps} from 'antd/lib/table';
+import React from "react";
+import { Table } from "../src";
+import { TableProps } from "antd/lib/table";
 
 export default {
   component: Table,
-  title: 'Table',
+  title: "Table",
 };
 
 const tableProps: TableProps<any> = {
   dataSource: [
     {
       id: 1,
-      name: 'Sai',
-      country: 'India',
-    }, {
+      name: "Sai",
+      country: "India",
+    },
+    {
       id: 2,
-      name: 'Vaddi',
-      country: 'USA',
+      name: "Vaddi",
+      country: "USA",
     },
   ],
   columns: [
     {
-      dataIndex: 'name',
+      dataIndex: "name",
     },
     {
-      dataIndex: 'country',
+      dataIndex: "country",
     },
   ],
-  rowKey: 'id',
+  rowKey: "id",
 };
 
 // By passing optional props to this story, you can control the props of the component when
