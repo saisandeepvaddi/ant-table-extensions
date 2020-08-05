@@ -38,6 +38,7 @@
   "author": "Sai Sandeep Vaddi",
   "module": "dist/ant-advanced-utils.esm.js",
   "devDependencies": {
+    "@ant-design/icons": "^4.2.2",
     "@babel/core": "^7.11.1",
     "@storybook/addon-actions": "^5.3.19",
     "@storybook/addon-docs": "^5.3.19",
@@ -58,5 +59,9 @@
     "tsdx": "^0.13.2",
     "tslib": "^2.0.0",
     "typescript": "^3.9.7"
+  },
+  "dependencies": {
+    "lodash-es": "^4.17.15",
+    "papaparse": "^5.2.0"
   }
 }
