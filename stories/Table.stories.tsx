@@ -1,7 +1,6 @@
 import React from "react";
-import { Table, ExportableTable } from "../src";
+import { Table } from "../src";
 import { FileExcelOutlined } from "@ant-design/icons";
-import { TableProps } from "antd/lib/table";
 import { columns, dataSource } from "./fixtures/table";
 import ExportTableButton from "../src/Table/ExportTableButton";
 
@@ -13,15 +12,15 @@ export default {
 // By passing optional props to this story, you can control the props of the component when
 // you consume the story in a test.
 
-export const Default = (props: any) => (
+export const Default = () => (
   <Table dataSource={dataSource} columns={columns} />
 );
 
-export const Exportable = (props: any) => {
+export const Exportable = () => {
   return <Table dataSource={dataSource} columns={columns} exportable />;
 };
 
-export const SelectExportColumns = (props: any) => {
+export const SelectExportColumns = () => {
   return (
     <Table
       dataSource={dataSource}
@@ -32,7 +31,7 @@ export const SelectExportColumns = (props: any) => {
   );
 };
 
-export const CustomExportButton = (props: any) => {
+export const CustomExportButton = () => {
   return (
     <div>
       <ExportTableButton
