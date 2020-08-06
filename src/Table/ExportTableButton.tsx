@@ -1,9 +1,10 @@
-import React, { Fragment, ReactChild } from "react";
+import React, { Fragment, ReactChild, ReactNode, useEffect } from "react";
 import { Button, Modal, Checkbox } from "antd";
 import Papa from "papaparse";
 import { difference, union } from "lodash-es";
+import { ColumnsType, ColumnGroupType, ColumnType } from "antd/lib/table";
 
-interface ExportFields {
+export interface TableExportFields {
   [fieldName: string]:
     | string
     | {
@@ -13,13 +14,33 @@ interface ExportFields {
 }
 
 export interface IExportFieldButtonProps {
-  dataSource: any[];
+  dataSource?: any[];
+  columns?: ColumnsType<any>;
   defaultFileName?: string;
-  fields: ExportFields;
+  fields?: TableExportFields;
   disabled?: boolean;
-  children?: ReactChild;
   btnProps?: Record<string, any>;
+  children?: ReactChild | ReactNode;
+  showExportColumnPicker?: boolean;
 }
+
+type ColumnWithDataIndex = (ColumnGroupType<any> | ColumnType<any>) & {
+  dataIndex?: string | string[];
+};
+
+const getFieldsFromColumns = (columns: ColumnsType<any>): TableExportFields => {
+  const fields = {};
+  columns?.forEach((column: ColumnWithDataIndex) => {
+    const { title, key, dataIndex } = column;
+    const fieldName =
+      (Array.isArray(dataIndex) ? dataIndex.join(".") : dataIndex) ?? key;
+    if (fieldName) {
+      fields[fieldName] = title;
+    }
+  });
+
+  return fields;
+};
 
 const cleanupDataSource = (dataSource, exportFieldNames, selectedFields) => {
   if (!dataSource || dataSource.length === 0) {
@@ -41,7 +62,7 @@ const cleanupDataSource = (dataSource, exportFieldNames, selectedFields) => {
       if (typeof value === "string") {
         return record[fieldName];
       }
-      return value.formatter(record[fieldName]) || null;
+      return value?.formatter(record[fieldName]) || null;
     });
   });
 
@@ -52,30 +73,47 @@ const ExportTableButton: React.FC<IExportFieldButtonProps> = props => {
   const {
     dataSource,
     defaultFileName,
-    fields: exportFieldNames,
+    fields,
     disabled,
     btnProps,
+    columns,
+    showExportColumnPicker: showColumnPicker,
   } = props;
-  const [showModal, setShowModal] = React.useState(false);
-  const [selectedFields, setSelectedFields] = React.useState(
-    Object.keys(exportFieldNames) || []
-  );
 
-  React.useEffect(() => {
-    setSelectedFields(Object.keys(exportFieldNames) ?? []);
-  }, [exportFieldNames]);
+  const [showModal, setShowModal] = React.useState(false);
+
+  const fieldsOrColumns = fields ?? getFieldsFromColumns(columns);
+
+  const [selectedFields, setSelectedFields] = React.useState(() => {
+    if (fields) {
+      return Object.keys(fields);
+    } else if (columns) {
+      return Object.keys(getFieldsFromColumns(columns));
+    }
+
+    return [];
+  });
+
+  useEffect(() => {
+    if (fields) {
+      setSelectedFields(Object.keys(fields));
+    } else if (columns) {
+      setSelectedFields(Object.keys(getFieldsFromColumns(columns)));
+    }
+  }, [fields, columns]);
 
   const handleDownloadCSV = React.useCallback(() => {
     if (!dataSource) {
       return;
     }
 
-    let selectedFieldsInOriginalOrder = Object.keys(exportFieldNames).filter(
+    let selectedFieldsInOriginalOrder = Object.keys(fieldsOrColumns).filter(
       name => selectedFields.indexOf(name) > -1
     );
+
     const data = cleanupDataSource(
       dataSource,
-      exportFieldNames,
+      fieldsOrColumns,
       selectedFieldsInOriginalOrder
     );
 
@@ -92,59 +130,66 @@ const ExportTableButton: React.FC<IExportFieldButtonProps> = props => {
     document.body.removeChild(a);
 
     setShowModal(false);
-  }, [dataSource, exportFieldNames, selectedFields]);
+  }, [dataSource, fieldsOrColumns, selectedFields, defaultFileName]);
 
-  const handleCheckboxChange = (key, checked) => {
-    let newSelectedFields = [...selectedFields];
-    if (checked) {
-      newSelectedFields = union(newSelectedFields, [key]);
-    } else {
-      newSelectedFields = difference(newSelectedFields, [key]);
-    }
+  const handleCheckboxChange = React.useCallback(
+    (key, checked) => {
+      let newSelectedFields = [...selectedFields];
+      if (checked) {
+        newSelectedFields = union(newSelectedFields, [key]);
+      } else {
+        newSelectedFields = difference(newSelectedFields, [key]);
+      }
 
-    setSelectedFields(newSelectedFields);
-  };
+      setSelectedFields(newSelectedFields);
+    },
+    [selectedFields]
+  );
 
   return (
     <Fragment>
       <Button
-        onClick={() => setShowModal(true)}
+        onClick={() =>
+          showColumnPicker ? setShowModal(true) : handleDownloadCSV()
+        }
         disabled={disabled}
         {...btnProps}
       >
         {props.children ?? `Export to CSV`}
       </Button>
-      <Modal
-        visible={showModal}
-        onOk={() => handleDownloadCSV()}
-        onCancel={() => setShowModal(false)}
-        width={400}
-        okButtonProps={{
-          disabled: selectedFields.length < 1,
-          title:
-            selectedFields.length < 1
-              ? "Please select at least one column."
-              : null,
-        }}
-        okText={"Export"}
-        title={"Select columns to export"}
-      >
-        <div className="d-flex flex-column align-start">
-          {Object.entries(exportFieldNames).map(([key, value]) => {
-            return (
-              <Checkbox
-                key={key}
-                style={{ padding: 0, margin: 0 }}
-                defaultChecked={true}
-                checked={selectedFields.indexOf(key) > -1}
-                onChange={e => handleCheckboxChange(key, e.target.checked)}
-              >
-                {typeof value === "string" ? value : value?.name ?? ""}
-              </Checkbox>
-            );
-          })}
-        </div>
-      </Modal>
+      {showColumnPicker ? (
+        <Modal
+          visible={showModal}
+          onOk={() => handleDownloadCSV()}
+          onCancel={() => setShowModal(false)}
+          width={400}
+          okButtonProps={{
+            disabled: selectedFields.length < 1,
+            title:
+              selectedFields.length < 1
+                ? "Please select at least one column."
+                : null,
+          }}
+          okText={"Export"}
+          title={"Select columns to export"}
+        >
+          <div className="d-flex flex-column align-start">
+            {Object.entries(fieldsOrColumns).map(([key, value]) => {
+              return (
+                <Checkbox
+                  key={key}
+                  style={{ padding: 0, margin: 0 }}
+                  defaultChecked={true}
+                  checked={selectedFields.indexOf(key) > -1}
+                  onChange={e => handleCheckboxChange(key, e.target.checked)}
+                >
+                  {typeof value === "string" ? value : value?.name ?? ""}
+                </Checkbox>
+              );
+            })}
+          </div>
+        </Modal>
+      ) : null}
     </Fragment>
   );
 };
@@ -156,11 +201,9 @@ const ExportTableButton: React.FC<IExportFieldButtonProps> = props => {
 //   disabled: PropTypes.bool.isRequired,
 // };
 
-// ExportTableButton.defaultProps = {
-//   dataSource: [],
-//   defaultFileName: "fileName",
-//   exportFieldNames: {},
-//   disabled: false,
-// };
+ExportTableButton.defaultProps = {
+  dataSource: [],
+  showExportColumnPicker: false,
+};
 
-export default React.memo(ExportTableButton);
+export default ExportTableButton;

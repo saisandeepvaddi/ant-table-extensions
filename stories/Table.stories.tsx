@@ -1,62 +1,49 @@
 import React from "react";
 import { Table, ExportableTable } from "../src";
+import { FileExcelOutlined } from "@ant-design/icons";
 import { TableProps } from "antd/lib/table";
+import { columns, dataSource } from "./fixtures/table";
+import ExportTableButton from "../src/Table/ExportTableButton";
 
 export default {
   component: Table,
   title: "Table",
 };
 
-const tableProps: TableProps<any> = {
-  dataSource: [
-    {
-      id: 1,
-      name: "Sai",
-      country: "India",
-    },
-    {
-      id: 2,
-      name: "Vaddi",
-      country: "USA",
-    },
-  ],
-  columns: [
-    {
-      dataIndex: "name",
-      title: "Name",
-    },
-    {
-      dataIndex: "country",
-      title: "Country",
-    },
-  ],
-  rowKey: "id",
-};
-
 // By passing optional props to this story, you can control the props of the component when
 // you consume the story in a test.
-export const Default = (props: any) => <Table {...props} {...tableProps} />;
+
+export const Default = (props: any) => (
+  <Table dataSource={dataSource} columns={columns} />
+);
 
 export const Exportable = (props: any) => {
-  return <ExportableTable {...props} {...tableProps} />;
+  return <Table dataSource={dataSource} columns={columns} exportable />;
 };
 
-export const CustomExportable = (props: any) => {
-  const fieldNames = {
-    name: "Name",
-    country: "Country",
-  };
+export const SelectExportColumns = (props: any) => {
+  return (
+    <Table
+      dataSource={dataSource}
+      columns={columns}
+      exportable
+      exportableProps={{ showExportColumnPicker: true }}
+    />
+  );
+};
 
+export const CustomExportButton = (props: any) => {
   return (
     <div>
-      <Table.ExportButton
-        dataSource={tableProps.dataSource}
-        fields={fieldNames}
-        btnProps={{ type: "primary" }}
+      <ExportTableButton
+        dataSource={dataSource}
+        columns={columns}
+        btnProps={{ type: "primary", icon: <FileExcelOutlined /> }}
+        showExportColumnPicker
       >
-        Export
-      </Table.ExportButton>
-      <Table {...props} {...tableProps} />
+        Export to CSV
+      </ExportTableButton>
+      <Table dataSource={dataSource} columns={columns} />
     </div>
   );
 };

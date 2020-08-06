@@ -1,29 +1,23 @@
 import React from "react";
 import { Table as AntTable } from "antd";
-import ExportTableButton, {
-  IExportFieldButtonProps,
-} from "./ExportTableButton";
-import { TableProps, ColumnProps } from "antd/lib/table";
+import ExportTableButton from "./ExportTableButton";
+import { ITableProps } from "Table";
 
-type IExportableTableProps = TableProps<any> & IExportFieldButtonProps;
-export const ExportableTable: React.FC<IExportableTableProps> = props => {
-  const { dataSource, columns } = props;
-  const fields = {};
-  columns?.forEach((column: ColumnProps<any>) => {
-    const { title, key, dataIndex } = column;
-    const fieldName =
-      (Array.isArray(dataIndex) ? dataIndex.join(".") : dataIndex) ?? key;
-    if (fieldName) {
-      fields[fieldName] = title;
-    }
-  });
+export const ExportableTable: React.FC<ITableProps<any>> = props => {
+  const { dataSource, columns, exportableProps } = props;
 
   return (
-    <div>
-      <ExportTableButton dataSource={dataSource} fields={fields}>
-        Export
-      </ExportTableButton>
+    <React.Fragment>
+      <div style={{ marginBottom: 10 }}>
+        <ExportTableButton
+          dataSource={dataSource}
+          columns={columns}
+          {...exportableProps}
+        >
+          Export
+        </ExportTableButton>
+      </div>
       <AntTable {...props} />
-    </div>
+    </React.Fragment>
   );
 };
