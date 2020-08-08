@@ -23,5 +23,3 @@ export const Table: React.FC<ITableProps<any>> = props => {
   }
   return <AntTable {...props} />;
 };
-
-// Table.ExportButton = ExportTableButton;
