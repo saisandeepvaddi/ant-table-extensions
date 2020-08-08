@@ -16,6 +16,10 @@ export const Default = () => (
   <Table dataSource={dataSource} columns={columns} />
 );
 
+export const Searchable = () => {
+  return <Table dataSource={dataSource} columns={columns} searchable />;
+};
+
 export const Exportable = () => {
   return <Table dataSource={dataSource} columns={columns} exportable />;
 };
