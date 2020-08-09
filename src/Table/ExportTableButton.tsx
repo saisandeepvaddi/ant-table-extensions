@@ -3,6 +3,7 @@ import { Button, Modal, Checkbox } from "antd";
 import Papa from "papaparse";
 import { difference, union } from "lodash-es";
 import { ColumnsType, ColumnGroupType, ColumnType } from "antd/lib/table";
+import { ButtonProps } from "antd/lib/button";
 
 export interface TableExportFields {
   [fieldName: string]:
@@ -19,7 +20,7 @@ export interface IExportFieldButtonProps {
   defaultFileName?: string;
   fields?: TableExportFields;
   disabled?: boolean;
-  btnProps?: Record<string, any>;
+  btnProps?: ButtonProps;
   children?: ReactChild | ReactNode;
   showExportColumnPicker?: boolean;
 }

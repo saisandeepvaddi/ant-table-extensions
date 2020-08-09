@@ -1,29 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Input } from "antd";
 import { debounce as debounceFn } from "lodash-es";
+import Fuse from "fuse.js";
+import { InputProps } from "antd/lib/input";
 
-const searchTable = (dataSource: any[], searchTerm = "") => {
-  let _dataSource = [];
-  if (!searchTerm) {
-    _dataSource = [...dataSource];
-  } else {
-    _dataSource = dataSource.slice(1);
-  }
-  console.log("_dataSource:", _dataSource);
-  return _dataSource;
-};
+export interface ISearchTableInputProps {
+  searchFunction?: (dataSource: any[], searchTerm: string) => any[];
+  dataSource: any[];
+  setDataSource: (dataSource: any[]) => void;
+  debounce?: boolean;
+  inputProps?: InputProps;
+  fuzzySearch?: boolean;
+  fuseProps?: Fuse.IFuseOptions<any>;
+}
 
-const SearchTableInput = ({
-  // query,
-  // setQuery,
+const SearchTableInput: React.FC<ISearchTableInputProps> = ({
   searchFunction = null,
-  columns,
   dataSource,
   setDataSource,
   debounce = true,
   inputProps,
+  fuzzySearch = false,
+  fuseProps = {
+    keys: dataSource?.[0] ? Object.keys(dataSource[0]) : [],
+    threshold: fuzzySearch ? 0.6 : 0,
+  },
 }) => {
   const [query, setQuery] = useState<string>("");
+  const allData = useRef<any[] | null>();
+  const fuse = useRef<Fuse<any> | null>();
+
+  useEffect(() => {
+    if (!dataSource) {
+      return;
+    }
+
+    allData.current = [...dataSource];
+    fuse.current = new Fuse(dataSource, fuseProps);
+  }, [dataSource]);
+
+  const searchTable = (_dataSource: any[], searchTerm = "") => {
+    if (searchTerm === "" || !fuse || !fuse.current) {
+      return allData.current;
+    }
+
+    const newResults = fuse.current.search(searchTerm).map(res => res.item);
+    return newResults;
+  };
 
   const searchTableDebounced = React.useCallback(
     debounceFn(
@@ -31,7 +54,7 @@ const SearchTableInput = ({
         const results = searchFn?.(dataSource, searchTerm);
         setDataSource(results);
       },
-      1000,
+      100,
       {
         leading: false,
         trailing: true,
@@ -48,7 +71,7 @@ const SearchTableInput = ({
       searchTableDebounced(dataSource, value, searchFunction ?? searchTable);
     } else {
       const results =
-        searchTable?.(dataSource, value) ?? searchTable(dataSource, value);
+        searchFunction?.(dataSource, value) ?? searchTable(dataSource, value);
       setDataSource(results);
     }
   };

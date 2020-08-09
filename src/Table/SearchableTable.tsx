@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import SearchTableInput from "./SearchTableInput";
-import { Table as AntTable } from "antd";
+import { Table as AntTable, Row, Col } from "antd";
 
 export const SearchableTable = props => {
   const { dataSource, columns, ...otherProps } = props;
@@ -8,6 +8,9 @@ export const SearchableTable = props => {
 
   return (
     <React.Fragment>
+      <Row justify="end">
+        <Col xs={12} sm={12} md={8} lg={4}></Col>
+      </Row>
       <div
         style={{
           marginBottom: 10,
@@ -16,7 +19,6 @@ export const SearchableTable = props => {
         }}
       >
         <SearchTableInput
-          columns={columns}
           dataSource={dataSource}
           setDataSource={setSearchDataSource}
           inputProps={{ placeholder: "Search" }}

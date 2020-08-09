@@ -1,20 +1,13 @@
-export const dataSource = [
-  {
-    key: 1,
-    name: "Person 1",
-    country: "India",
-  },
-  {
-    key: 2,
-    name: "Person 2",
-    country: "USA",
-  },
-];
+export { default as dataSource } from "./people.json";
 
 export const columns = [
   {
-    dataIndex: "name",
-    title: "Name",
+    dataIndex: "firstName",
+    title: "First Name",
+  },
+  {
+    dataIndex: "lastName",
+    title: "Last Name",
   },
   {
     dataIndex: "country",
