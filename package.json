@@ -34,9 +34,9 @@
     "singleQuote": false,
     "trailingComma": "es5"
   },
-  "name": "ant-advanced-utils",
+  "name": "ant-advanced-extensions",
   "author": "Sai Sandeep Vaddi",
-  "module": "dist/ant-advanced-utils.esm.js",
+  "module": "dist/ant-advanced-extensions.esm.js",
   "devDependencies": {
     "@ant-design/icons": "^4.2.2",
     "@babel/core": "^7.11.1",
