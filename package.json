@@ -23,11 +23,6 @@
     "antd": "^4.5.2",
     "react": ">=16"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint"
-    }
-  },
   "prettier": {
     "printWidth": 80,
     "semi": true,
@@ -51,7 +46,6 @@
     "@types/react-dom": "^16.9.8",
     "antd": "^4.5.2",
     "babel-loader": "^8.1.0",
-    "husky": "^4.2.5",
     "react": "^16.13.1",
     "react-docgen-typescript-loader": "^3.7.2",
     "react-dom": "^16.13.1",
