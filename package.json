@@ -1,5 +1,15 @@
 {
+  "name": "ant-table-extensions",
   "version": "0.1.0-alpha",
+  "author": {
+    "name": "Sai Sandeep Vaddi",
+    "url": "https://saisandeepvaddi.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/saisandeepvaddi/ant-table-extensions.git"
+  },
+  "homepage": "https://github.com/saisandeepvaddi/ant-table-extensions",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -31,8 +41,6 @@
     "singleQuote": false,
     "trailingComma": "es5"
   },
-  "name": "ant-table-extensions",
-  "author": "Sai Sandeep Vaddi",
   "module": "dist/ant-table-extensions.esm.js",
   "devDependencies": {
     "@ant-design/icons": "^4.2.2",
