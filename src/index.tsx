@@ -7,6 +7,9 @@ import ExportTableButton, {
 } from "./ExportTableButton";
 import SearchTableInput, { ISearchTableInputProps } from "./SearchTableInput";
 
+export * from "./ExportTableButton";
+export * from "./SearchTableInput";
+
 export type IExportableTableProps = TableProps<any> & IExportFieldButtonProps;
 
 export type ITableUtils = {

@@ -1,13 +1,20 @@
 import * as React from "react";
-import { Table, ITableProps } from "../src";
+import {
+  Table,
+  ITableProps,
+  ExportTableButton,
+  SearchTableInput,
+  ITableExportFields,
+} from "../src";
 import { FileExcelOutlined, SearchOutlined } from "@ant-design/icons";
 import { columns, dataSource } from "../fixtures/table";
-import ExportTableButton, {
-  ITableExportFields,
-} from "../src/ExportTableButton";
-import SearchTableInput from "../src/SearchTableInput";
+// import ExportTableButton, {
+//   ITableExportFields,
+// } from "../src/ExportTableButton";
+// import SearchTableInput from "../src/SearchTableInput";
 
 import "antd/dist/antd.compact.min.css";
+// import { ITableExportFields } from "../src/ExportTableButton";
 
 export default {
   component: Table,

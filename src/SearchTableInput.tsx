@@ -25,7 +25,7 @@ export interface ISearchTableInputProps {
   fuseProps?: Fuse.IFuseOptions<any>;
 }
 
-const SearchTableInput: React.FC<ISearchTableInputProps> = ({
+export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
   searchFunction = null,
   dataSource,
   setDataSource,

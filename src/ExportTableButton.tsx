@@ -80,7 +80,7 @@ const cleanupDataSource = (dataSource, exportFieldNames, selectedFields) => {
   return [fields, ...data];
 };
 
-const ExportTableButton: React.FC<IExportFieldButtonProps> = props => {
+export const ExportTableButton: React.FC<IExportFieldButtonProps> = props => {
   const {
     dataSource = [],
     fileName,
