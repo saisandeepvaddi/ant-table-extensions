@@ -31,6 +31,14 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
+  "jest": {
+    "moduleNameMapper": {
+      "^lodash-es$": "lodash",
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(css|less)$": "identity-obj-proxy"
+    },
+    "testEnvironment": "jest-environment-jsdom-fifteen"
+  },
   "peerDependencies": {
     "antd": "^4.x",
     "react": ">=16.8"
@@ -52,11 +60,16 @@
     "@storybook/addon-links": "^6.0.2",
     "@storybook/addons": "^5.3.19",
     "@storybook/react": "^6.0.2",
+    "@testing-library/jest-dom": "^5.11.3",
+    "@testing-library/react": "^10.4.8",
+    "@testing-library/user-event": "^12.1.1",
     "@types/lodash-es": "^4.17.3",
     "@types/react": "^16.9.44",
     "@types/react-dom": "^16.9.8",
     "antd": "^4.5.2",
     "babel-loader": "^8.1.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest-environment-jsdom-fifteen": "^1.0.2",
     "react": "^16.13.1",
     "react-docgen-typescript-loader": "^3.7.2",
     "react-dom": "^16.13.1",

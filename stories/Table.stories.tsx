@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Table, ITableProps } from "../src";
 import { FileExcelOutlined, SearchOutlined } from "@ant-design/icons";
-import { columns, dataSource } from "./fixtures/table";
+import { columns, dataSource } from "../fixtures/table";
 import ExportTableButton, {
   ITableExportFields,
 } from "../src/ExportTableButton";
@@ -58,7 +58,7 @@ export const CustomizeExportData = () => {
     firstName: "Name",
     fullName: {
       header: "Full Name",
-      formatter: (fieldValue, record) => {
+      formatter: (_fieldValue, record) => {
         return record?.firstName + " " + record?.lastName;
       },
     },
