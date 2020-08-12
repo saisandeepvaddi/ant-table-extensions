@@ -27,9 +27,9 @@ export type ITableProps<T> = TableProps<T> & ITableUtils;
  *
  */
 export const Table: React.FC<ITableProps<any>> = ({
-  exportable,
+  exportable = true,
   exportableProps,
-  searchable,
+  searchable = true,
   searchableProps,
   dataSource,
   columns,

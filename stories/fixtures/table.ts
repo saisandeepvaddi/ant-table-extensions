@@ -1,4 +1,4 @@
-export { default as dataSource } from "./people.json";
+export { default as dataSource } from "./people-small.json";
 
 export const columns = [
   {
