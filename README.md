@@ -12,6 +12,7 @@
     | 
     <a href="https://ant-table-extensions.vercel.app/?path=/docs/demos--default">Demos</a>
 </p>
+
 Extensions to `Table` component of [React Ant Design Table](https://ant.design/components/table/)
 
 ## Pre-requisite
