@@ -6,7 +6,8 @@ import { Meta, Story } from "@storybook/addon-docs/blocks";
 
 ## Installation
 
-> **NOTE:** This library works in a project already using React Ant Design. So you should have `antd` library and it's styles already. Visit [ant official docs page](https://ant.design) for installation.
+> **NOTE:** This library works in a project already using React Ant Design. So you should have `antd` and `React >=16.8 (The one with hooks)` installed.
+> This library **WILL NOT** import ant styles for you and your project is expected to have them imported already. Visit [ant official docs page](https://ant.design) for installation.
 
 ```shell
 npm install ant-table-extensions
@@ -18,11 +19,11 @@ yarn add ant-table-extensions
 
 ```diff
 // Don't forget to import ant styles
-- import {Table} from "antd";
-+ import {Table} from "ant-table-extensions";
+- import { Table } from "antd";
++ import { Table } from "ant-table-extensions";
 
 function App() {
-  return <Table dataSource={dataSource} columns={columns} {..any other ant props} />
+  return <Table dataSource={dataSource} columns={columns} {..any other ant table props} />
 }
 
 ```
@@ -44,6 +45,8 @@ Plus, All of the [ant table props](https://ant.design/components/table/#API).
 
 #### exportableProps
 
+> exportable: true is optional if exportableProps are given
+
 | Prop             | Description                                                                                  | Type       | default         |
 | ---------------- | -------------------------------------------------------------------------------------------- | ---------- | --------------- |
 | fileName         | File name in exporting csv file without extension                                            | string     | `table`         |
@@ -54,6 +57,8 @@ Plus, All of the [ant table props](https://ant.design/components/table/#API).
 | children         | React Child node. But here can be used to change button text.                                | ReactChild | "Export to CSV" |
 
 #### searchableProps
+
+> searchable: true is optional if searchableProps are given
 
 | Prop           | Description                                                                                 | Type     | default                                                                                       |
 | -------------- | ------------------------------------------------------------------------------------------- | -------- | --------------------------------------------------------------------------------------------- |

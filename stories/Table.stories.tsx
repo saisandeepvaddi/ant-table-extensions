@@ -50,32 +50,40 @@ export const PickExportColumns = () => {
 export const CustomizeExportData = () => {
   /**
    * {
-   *   [dataIndex]: header | {name: "column name", formatter: (fieldValue, record, recordIndex) => header}
+   *   [dataIndex]: header | {header: "column name", formatter: (fieldValue, record, recordIndex) => header}
    * }
    *
    */
   const fields: ITableExportFields = {
-    firstName: "Not First Name",
+    firstName: "Name",
     fullName: {
-      name: "Full Name",
+      header: "Full Name",
       formatter: (fieldValue, record) => {
         return record?.firstName + " " + record?.lastName;
       },
     },
     country: {
-      name: "Your Country",
+      header: "Your Country",
       formatter: fieldValue => {
         return "-->  " + fieldValue;
       },
     },
   };
   return (
-    <Table
-      dataSource={dataSource}
-      columns={columns}
-      exportable
-      exportableProps={{ fields }}
-    />
+    <React.Fragment>
+      <p>
+        <span role="img" aria-label="red circle">
+          🔴
+        </span>{" "}
+        <b>NOTE:</b> Click 'Show Code' to see usage.
+      </p>
+      <Table
+        dataSource={dataSource}
+        columns={columns}
+        exportable
+        exportableProps={{ fields, fileName: "my-table" }}
+      />
+    </React.Fragment>
   );
 };
 
@@ -124,7 +132,7 @@ export const AdvancedExportButton = () => {
         <span role="img" aria-label="red circle">
           🔴
         </span>{" "}
-        <b>NOTE:</b> Click 'Show Code' to see some comments about usage.
+        <b>NOTE:</b> Click 'Show Code' to see comments about usage.
       </p>
 
       <ExportTableButton
@@ -158,7 +166,7 @@ export const AdvancedSearchInput = () => {
         <span role="img" aria-label="red circle">
           🔴
         </span>{" "}
-        <b>NOTE:</b> Click 'Show Code' to see some comments about usage.
+        <b>NOTE:</b> Click 'Show Code' to see comments about usage.
       </p>
       <SearchTableInput
         dataSource={dataSource} // 🔴 Original dataSource

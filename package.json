@@ -20,8 +20,8 @@
     "build-storybook": "build-storybook"
   },
   "peerDependencies": {
-    "antd": "^4.5.2",
-    "react": ">=16"
+    "antd": "^4.x",
+    "react": ">=16.8"
   },
   "prettier": {
     "printWidth": 80,

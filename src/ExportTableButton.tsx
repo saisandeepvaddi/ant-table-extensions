@@ -9,7 +9,7 @@ export interface ITableExportFields {
   [dataIndex: string]:
     | string
     | {
-        name: string;
+        header: string;
         formatter?: (fieldValue: any, record: any, index: number) => string;
       };
 }
@@ -64,7 +64,7 @@ const cleanupDataSource = (dataSource, exportFieldNames, selectedFields) => {
     if (typeof formatter === "string") {
       return exportFieldNames[fieldName];
     }
-    return exportFieldNames[fieldName].name || "";
+    return exportFieldNames[fieldName].header || "";
   });
 
   const data = newData.map(record => {
@@ -194,7 +194,7 @@ const ExportTableButton: React.FC<IExportFieldButtonProps> = props => {
                   checked={selectedFields.indexOf(key) > -1}
                   onChange={e => handleCheckboxChange(key, e.target.checked)}
                 >
-                  {typeof value === "string" ? value : value?.name ?? ""}
+                  {typeof value === "string" ? value : value?.header ?? ""}
                 </Checkbox>
               );
             })}
@@ -204,17 +204,5 @@ const ExportTableButton: React.FC<IExportFieldButtonProps> = props => {
     </Fragment>
   );
 };
-
-// ExportTableButton.propTypes = {
-//   dataSource: PropTypes.array.isRequired,
-//   defaultFileName: PropTypes.string.isRequired,
-//   exportFieldNames: PropTypes.object.isRequired,
-//   disabled: PropTypes.bool.isRequired,
-// };
-
-// ExportTableButton.defaultProps = {
-//   dataSource: [],
-//   showColumnPicker: false,
-// };
 
 export default ExportTableButton;
