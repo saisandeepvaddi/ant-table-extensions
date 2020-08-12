@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/saisandeepvaddi/ant-table-extensions">
-        <img alt="Logo" src="./imgs/logo.png" width="150" />
+        <img alt="Logo" src="https://raw.githubusercontent.com/saisandeepvaddi/ant-table-extensions/master/imgs/logo.png" width="150" />
   </a>
   <h1 align="center">
     Ant Table Extensions
