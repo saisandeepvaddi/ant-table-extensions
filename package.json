@@ -31,9 +31,9 @@
     "singleQuote": false,
     "trailingComma": "es5"
   },
-  "name": "ant-advanced-extensions",
+  "name": "ant-table-extensions",
   "author": "Sai Sandeep Vaddi",
-  "module": "dist/ant-advanced-extensions.esm.js",
+  "module": "dist/ant-table-extensions.esm.js",
   "devDependencies": {
     "@ant-design/icons": "^4.2.2",
     "@babel/core": "^7.11.1",
