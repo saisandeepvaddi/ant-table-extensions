@@ -67,13 +67,13 @@ const cleanupDataSource = (dataSource, exportFieldNames, selectedFields) => {
     return exportFieldNames[fieldName].header || "";
   });
 
-  const data = newData.map(record => {
-    return selectedFields.map((fieldName, index) => {
+  const data = newData.map((record, rowIndex) => {
+    return selectedFields.map(fieldName => {
       const value = exportFieldNames[fieldName];
       if (typeof value === "string") {
         return record[fieldName];
       }
-      return value?.formatter(record[fieldName], record, index) || null;
+      return value?.formatter(record[fieldName], record, rowIndex) || null;
     });
   });
 

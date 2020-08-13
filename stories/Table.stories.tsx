@@ -57,7 +57,7 @@ export const PickExportColumns = () => {
 export const CustomizeExportData = () => {
   /**
    * {
-   *   [dataIndex]: header | {header: "column name", formatter: (fieldValue, record, recordIndex) => header}
+   *   [dataIndex]: header | {header: "column header name in csv", formatter: (fieldValue, record, rowIndex) => value}
    * }
    *
    */
