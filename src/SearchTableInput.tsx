@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Input } from "antd";
-import { debounce as debounceFn } from "lodash-es";
+import debounceFn from "lodash/debounce";
 import Fuse from "fuse.js";
 import { InputProps } from "antd/lib/input";
 

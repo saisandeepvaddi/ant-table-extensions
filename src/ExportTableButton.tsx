@@ -1,7 +1,8 @@
 import React, { Fragment, ReactChild, ReactNode, useEffect } from "react";
 import { Button, Modal, Checkbox } from "antd";
 import Papa from "papaparse";
-import { difference, union } from "lodash-es";
+import difference from "lodash/difference";
+import union from "lodash/union";
 import { ColumnsType, ColumnGroupType, ColumnType } from "antd/lib/table";
 import { ButtonProps } from "antd/lib/button";
 
