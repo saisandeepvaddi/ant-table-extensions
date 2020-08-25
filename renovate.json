@@ -3,7 +3,8 @@
   "packageRules": [
     {
       "updateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true
+      "automerge": true,
+      "schedule": ["after 10pm and before 5am"]
     }
   ]
 }
