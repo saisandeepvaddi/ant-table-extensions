@@ -97,6 +97,43 @@ test("Searches in searchable table", async () => {
   expect(screen.getByText(dataSource[1].lastName)).toBeInTheDocument();
 });
 
+test("Searches in modified dataSource", async () => {
+  const { rerender } = render(
+    <Table dataSource={dataSource} columns={columns} searchable />
+  );
+  expect(screen.getByText(dataSource[0].lastName)).toBeInTheDocument();
+  expect(screen.getByText(dataSource[1].lastName)).toBeInTheDocument();
+  const searchBox = screen.getByPlaceholderText(/search/i);
+  expect(searchBox).toBeInTheDocument();
+  userEvent.type(searchBox, dataSource[1].lastName);
+  await waitFor(() =>
+    expect(screen.queryByText(dataSource[0].lastName)).not.toBeInTheDocument()
+  );
+  expect(screen.getByText(dataSource[1].lastName)).toBeInTheDocument();
+
+  const newDataSource = dataSource.slice(2, 5);
+  rerender(<Table dataSource={newDataSource} columns={columns} searchable />);
+  expect(screen.queryByText(/no data/i)).not.toBeInTheDocument();
+
+  expect(screen.queryByText(dataSource[0].lastName)).not.toBeInTheDocument();
+  expect(screen.queryByText(dataSource[1].lastName)).not.toBeInTheDocument();
+
+  expect(screen.getByText(dataSource[2].lastName)).toBeInTheDocument();
+  const newSearchBox = screen.getByPlaceholderText(/search/i);
+  expect(newSearchBox).toBeInTheDocument();
+
+  userEvent.clear(newSearchBox);
+  userEvent.type(newSearchBox, newDataSource[1].lastName);
+
+  await waitFor(() =>
+    expect(
+      screen.queryByText(newDataSource[0].lastName)
+    ).not.toBeInTheDocument()
+  );
+
+  expect(screen.queryByText(newDataSource[1].lastName)).toBeInTheDocument();
+});
+
 test("Exports csv file on export btn click", async () => {
   render(<Table dataSource={dataSource} columns={columns} exportable />);
   expect(screen.getByText(dataSource[0].firstName)).toBeInTheDocument();

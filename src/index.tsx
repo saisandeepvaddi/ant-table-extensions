@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Table as AntTable } from "antd";
-// import ExportTableButton from "./ExportTableButton";
 import { TableProps } from "antd/lib/table";
 import ExportTableButton, {
   IExportFieldButtonProps,
 } from "./ExportTableButton";
 import SearchTableInput, { ISearchTableInputProps } from "./SearchTableInput";
+import { useMountedState } from "./hooks/isMounted";
 
 export * from "./ExportTableButton";
 export * from "./SearchTableInput";
@@ -34,20 +34,16 @@ export const Table: React.FC<ITableProps<any>> = ({
   columns,
   ...otherProps
 }) => {
-  //  const {
-  //    exportable,
-  //    exportableProps,
-  //    searchable,
-  //    searchableProps,
-  //    dataSource,
-  //    columns,
-  //    ...otherProps
-  //  } = props;
-
+  const isMounted = useMountedState();
   const isExportable = exportable || exportableProps;
   const isSearchable = searchable || searchableProps;
-
   const [searchDataSource, setSearchDataSource] = useState<any>(dataSource);
+
+  useEffect(() => {
+    if (isSearchable && isMounted()) {
+      setSearchDataSource(dataSource);
+    }
+  }, [isSearchable, dataSource, isMounted]);
 
   return (
     <div>
