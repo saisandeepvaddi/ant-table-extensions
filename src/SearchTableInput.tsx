@@ -43,15 +43,6 @@ export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
   const allData = useRef<any[] | null>();
   const fuse = useRef<Fuse<any> | null>();
 
-  useEffect(() => {
-    if (!dataSource) {
-      return;
-    }
-
-    allData.current = [...dataSource];
-    fuse.current = new Fuse(dataSource, fuseProps);
-  }, [dataSource, fuseProps]);
-
   const searchTable = (_dataSource: any[], searchTerm = "") => {
     if (searchTerm === "" || !fuse || !fuse.current) {
       return allData.current;
@@ -89,11 +80,44 @@ export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
     }
   };
 
+  useEffect(() => {
+    if (!dataSource) {
+      return;
+    }
+
+    allData.current = [...dataSource];
+    fuse.current = new Fuse(dataSource, fuseProps);
+  }, [dataSource, fuseProps]);
+
+  useEffect(() => {
+    // If dataSource updates dynamically (for example, swr or react-query mutates) and the input box is not empty,
+    // It should keep the new dataSource filtered if there is a value in input box
+    if (!dataSource || !query) {
+      return;
+    }
+
+    if (debounce) {
+      searchTableDebounced(dataSource, query, searchFunction ?? searchTable);
+    } else {
+      const results =
+        searchFunction?.(dataSource, query) ?? searchTable(dataSource, query);
+      setDataSource(results);
+    }
+  }, [
+    query,
+    dataSource,
+    searchTableDebounced,
+    searchFunction,
+    setDataSource,
+    debounce,
+  ]);
+
   return (
     <Input
       value={query}
       onChange={handleInputChange}
       placeholder="Search..."
+      allowClear
       {...inputProps}
     />
   );

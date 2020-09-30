@@ -134,6 +134,34 @@ test("Searches in modified dataSource", async () => {
   expect(screen.queryByText(newDataSource[1].lastName)).toBeInTheDocument();
 });
 
+test("Keeps results filtered if dataSource changed and input has previous value", async () => {
+  const { rerender } = render(
+    <Table dataSource={dataSource} columns={columns} searchable />
+  );
+
+  expect(screen.getByText(dataSource[0].lastName)).toBeInTheDocument();
+  expect(screen.getByText(dataSource[1].lastName)).toBeInTheDocument();
+  const searchBox = screen.getByPlaceholderText(/search/i);
+  expect(searchBox).toBeInTheDocument();
+
+  userEvent.type(searchBox, dataSource[1].lastName);
+  await waitFor(() =>
+    expect(screen.queryByText(dataSource[0].lastName)).not.toBeInTheDocument()
+  );
+
+  expect(screen.getByText(dataSource[1].lastName)).toBeInTheDocument();
+
+  const newDataSource = dataSource.slice(0);
+  rerender(<Table dataSource={newDataSource} columns={columns} searchable />);
+  expect(screen.queryByText(/no data/i)).not.toBeInTheDocument();
+
+  await waitFor(() =>
+    expect(screen.queryByText(dataSource[0].lastName)).not.toBeInTheDocument()
+  );
+
+  expect(screen.getByText(dataSource[1].lastName)).toBeInTheDocument();
+});
+
 test("Exports csv file on export btn click", async () => {
   render(<Table dataSource={dataSource} columns={columns} exportable />);
   expect(screen.getByText(dataSource[0].firstName)).toBeInTheDocument();
