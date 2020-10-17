@@ -8,6 +8,8 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
+    "ant-table-extensions": "^1.1.4",
+    "antd": "^4.7.0",
     "react-app-polyfill": "^1.0.0"
   },
   "alias": {

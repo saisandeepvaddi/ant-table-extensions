@@ -63,6 +63,7 @@ export const Table: React.FC<ITableProps<any>> = ({
         ) : null}
         {isSearchable ? (
           <SearchTableInput
+            columns={columns}
             dataSource={dataSource}
             setDataSource={setSearchDataSource}
             {...searchableProps}

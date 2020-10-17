@@ -3,6 +3,7 @@ import { Input } from "antd";
 import debounceFn from "lodash/debounce";
 import Fuse from "fuse.js";
 import { InputProps } from "antd/lib/input";
+import { ColumnsType } from "antd/lib/table";
 
 export interface ISearchTableInputProps {
   /** Custom function to search if you want to use your own search.
@@ -12,6 +13,9 @@ export interface ISearchTableInputProps {
 
   /** Ant table's dataSource. */
   dataSource?: any[];
+
+  /** Ant table's columns */
+  columns?: ColumnsType<any>;
 
   /** `setState` style function which updates dataSource. */
   setDataSource?: (dataSource: any[]) => void;
@@ -25,6 +29,33 @@ export interface ISearchTableInputProps {
   fuseProps?: Fuse.IFuseOptions<any>;
 }
 
+const createDefaultFuseKeys = (dataSource: any[], columns: any) => {
+  const firstRecord = dataSource?.[0];
+  const keys = columns.map(column => {
+    const { dataIndex } = column;
+    // ant table allows nested objects with array of strings as dataIndex
+    if (Array.isArray(dataIndex)) {
+      return dataIndex.join(".");
+    }
+
+    // If in actual dataIndex the record is object literal but column specified as string, throw error.
+    // Even though it's something you shouldn't do based on ant table's API, since users will see fuse.js `value.trim is not a function error` I'm throwing error.
+    if (
+      firstRecord &&
+      Object.prototype.toString.call(firstRecord[dataIndex]) ===
+        "[object Object]" &&
+      typeof dataIndex === "string"
+    ) {
+      throw new Error(
+        `'${dataIndex}' is an object in dataSource. But dataIndex is given as string. If it is an object, use array of strings as dataIndex.`
+      );
+    }
+    return dataIndex;
+  });
+
+  return keys;
+};
+
 export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
   searchFunction = null,
   dataSource,
@@ -34,14 +65,20 @@ export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
     placeholder: "Search...",
   },
   fuzzySearch = false,
-  fuseProps = {
-    keys: dataSource?.[0] ? Object.keys(dataSource[0]) : [],
-    threshold: fuzzySearch ? 0.6 : 0,
-  },
+  columns,
+  fuseProps,
 }) => {
   const [query, setQuery] = useState<string>("");
   const allData = useRef<any[] | null>();
   const fuse = useRef<Fuse<any> | null>();
+
+  const _fuseProps = React.useMemo(() => {
+    return {
+      ...fuseProps,
+      keys: createDefaultFuseKeys(dataSource, columns),
+      threshold: fuzzySearch ? 0.6 : 0,
+    };
+  }, [fuseProps, dataSource, columns, fuzzySearch]);
 
   const searchTable = (_dataSource: any[], searchTerm = "") => {
     if (searchTerm === "" || !fuse || !fuse.current) {
@@ -86,8 +123,8 @@ export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
     }
 
     allData.current = [...dataSource];
-    fuse.current = new Fuse(dataSource, fuseProps);
-  }, [dataSource, fuseProps]);
+    fuse.current = new Fuse(dataSource, _fuseProps);
+  }, [dataSource, _fuseProps]);
 
   useEffect(() => {
     // If dataSource updates dynamically (for example, swr or react-query mutates) and the input box is not empty,

@@ -29,7 +29,8 @@
     "lint": "tsdx lint src stories",
     "prepare": "tsdx build",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "example:start": "cd ./example && yarn start"
   },
   "jest": {
     "moduleNameMapper": {

@@ -175,3 +175,37 @@ test("Exports csv file on export btn click", async () => {
   console.error = jest.fn();
   await waitFor(() => expect(window.URL.createObjectURL).toHaveBeenCalled());
 });
+
+test("Searches objects in dataSource in searchable", async () => {
+  const _dataSource = [
+    {
+      key: -1,
+      firstName: "test_fname",
+      lastName: "test_lname",
+      contact: {
+        name: "pikachu",
+      },
+    },
+    ...dataSource,
+  ];
+
+  const _columns = [
+    ...columns,
+    {
+      dataIndex: ["contact", "name"],
+    },
+  ];
+
+  render(<Table dataSource={_dataSource} columns={_columns} searchable />);
+  expect(screen.getByText(dataSource[0].firstName)).toBeInTheDocument();
+  expect(screen.getByText(dataSource[0].lastName)).toBeInTheDocument();
+  expect(screen.getByText(dataSource[0].country)).toBeInTheDocument();
+
+  expect(screen.getByText(dataSource[1].lastName)).toBeInTheDocument();
+
+  const searchBox = screen.getByPlaceholderText(/search/i);
+  expect(searchBox).toBeInTheDocument();
+
+  userEvent.type(searchBox, "pikachu");
+  expect(screen.queryByText("pikachu")).toBeInTheDocument();
+});
