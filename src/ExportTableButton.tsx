@@ -3,6 +3,8 @@ import { Button, Modal, Checkbox } from "antd";
 import Papa from "papaparse";
 import difference from "lodash/difference";
 import union from "lodash/union";
+import get from "lodash/get";
+import set from "lodash/set";
 import { ColumnsType, ColumnGroupType, ColumnType } from "antd/lib/table";
 import { ButtonProps } from "antd/lib/button";
 
@@ -47,7 +49,7 @@ const getFieldsFromColumns = (
     const fieldName =
       (Array.isArray(dataIndex) ? dataIndex.join(".") : dataIndex) ?? key;
     if (fieldName) {
-      fields[fieldName] = title;
+      set(fields, fieldName, title);
     }
   });
 
@@ -61,20 +63,21 @@ const cleanupDataSource = (dataSource, exportFieldNames, selectedFields) => {
 
   const newData = [...dataSource];
   const fields = selectedFields.map(fieldName => {
-    const formatter = exportFieldNames[fieldName];
-    if (typeof formatter === "string") {
-      return exportFieldNames[fieldName];
+    const fieldValue = get(exportFieldNames, fieldName);
+    if (typeof fieldValue === "string") {
+      return fieldValue;
     }
-    return exportFieldNames[fieldName].header || "";
+    return fieldValue.header || "";
   });
 
   const data = newData.map((record, rowIndex) => {
     return selectedFields.map(fieldName => {
-      const value = exportFieldNames[fieldName];
-      if (typeof value === "string") {
-        return record[fieldName];
+      const fieldValue = get(exportFieldNames, fieldName);
+      const recordValue = get(record, fieldName);
+      if (typeof fieldValue === "string") {
+        return recordValue;
       }
-      return value?.formatter(record[fieldName], record, rowIndex) || null;
+      return fieldValue?.formatter(recordValue, record, rowIndex) || null;
     });
   });
 
