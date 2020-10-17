@@ -176,7 +176,7 @@ export const AdvancedSearchInput = () => {
         <b>NOTE:</b> Click 'Show Code' to see comments about usage.
       </p>
       <SearchTableInput
-        columns={columns} // 🔴 Original dataSource
+        columns={columns}
         dataSource={dataSource} // 🔴 Original dataSource
         setDataSource={setSearchDataSource} // 🔴 Newly created setSearchDataSource from useState hook
         inputProps={{
