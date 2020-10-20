@@ -59,6 +59,9 @@ const columns = [
   {
     dataIndex: ["contact", "name"],
   },
+  {
+    dataIndex: "",
+  },
 ];
 
 const App = () => {
@@ -69,7 +72,7 @@ const App = () => {
         dataSource={dataSource}
         columns={columns}
         searchable
-        searchableProps={{ fuzzySearch: true }}
+        // searchableProps={{ fuzzySearch: true }}
       />
     </div>
   );

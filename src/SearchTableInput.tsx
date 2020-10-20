@@ -31,27 +31,30 @@ export interface ISearchTableInputProps {
 
 const createDefaultFuseKeys = (dataSource: any[], columns: any) => {
   const firstRecord = dataSource?.[0];
-  const keys = columns.map(column => {
-    const { dataIndex } = column;
-    // ant table allows nested objects with array of strings as dataIndex
-    if (Array.isArray(dataIndex)) {
-      return dataIndex.join(".");
-    }
+  const keys = columns
+    .filter(column => !!column.dataIndex)
+    .map(column => {
+      const { dataIndex } = column;
 
-    // If in actual dataIndex the record is object literal but column specified as string, throw error.
-    // Even though it's something you shouldn't do based on ant table's API, since users will see fuse.js `value.trim is not a function error` I'm throwing error.
-    if (
-      firstRecord &&
-      Object.prototype.toString.call(firstRecord[dataIndex]) ===
-        "[object Object]" &&
-      typeof dataIndex === "string"
-    ) {
-      throw new Error(
-        `'${dataIndex}' is an object in dataSource. But dataIndex is given as string. If it is an object, use array of strings as dataIndex.`
-      );
-    }
-    return dataIndex;
-  });
+      // ant table allows nested objects with array of strings as dataIndex
+      if (Array.isArray(dataIndex)) {
+        return dataIndex.join(".");
+      }
+
+      // If in actual dataIndex the record is object literal but column specified as string, throw error.
+      // Even though it's something you shouldn't do based on ant table's API, since users will see fuse.js `value.trim is not a function error` I'm throwing error.
+      if (
+        firstRecord &&
+        Object.prototype.toString.call(firstRecord[dataIndex]) ===
+          "[object Object]" &&
+        typeof dataIndex === "string"
+      ) {
+        throw new Error(
+          `'${dataIndex}' is an object in dataSource. But dataIndex is given as string. If it is an object, use array of strings as dataIndex.`
+        );
+      }
+      return dataIndex;
+    });
 
   return keys;
 };
