@@ -209,3 +209,87 @@ test("Searches objects in dataSource in searchable", async () => {
   userEvent.type(searchBox, "pikachu");
   expect(screen.queryByText("pikachu")).toBeInTheDocument();
 });
+
+test("Searches tables with columns with empty dataIndex", async () => {
+  const _dataSource = [
+    {
+      key: -1,
+      firstName: "test_fname",
+      lastName: "test_lname",
+      contact: {
+        name: "pikachu",
+      },
+    },
+    ...dataSource,
+  ];
+
+  const _columns = [
+    ...columns,
+    {
+      dataIndex: ["contact", "name"],
+    },
+    {
+      dataIndex: "",
+    },
+  ];
+
+  render(<Table dataSource={_dataSource} columns={_columns} searchable />);
+  expect(screen.getByText(dataSource[0].firstName)).toBeInTheDocument();
+  expect(screen.getByText(dataSource[0].lastName)).toBeInTheDocument();
+  expect(screen.getByText(dataSource[0].country)).toBeInTheDocument();
+
+  expect(screen.getByText(dataSource[1].lastName)).toBeInTheDocument();
+
+  const searchBox = screen.getByPlaceholderText(/search/i);
+  expect(searchBox).toBeInTheDocument();
+
+  userEvent.type(searchBox, "pikachu");
+  expect(screen.queryByText("pikachu")).toBeInTheDocument();
+});
+
+test("Searches tables with grouped headers", async () => {
+  const _dataSource = [
+    {
+      key: -1,
+      firstName: "test_fname",
+      lastName: "test_lname",
+      companyName: "test_company",
+      companyAddress: "test_companyAddress",
+    },
+    ...dataSource,
+  ];
+
+  const _columns = [
+    ...columns,
+    {
+      title: "Company",
+      children: [
+        {
+          title: "Company Address",
+          dataIndex: "companyAddress",
+          key: "companyAddress",
+          width: 200,
+        },
+        {
+          title: "Company Name",
+          dataIndex: "companyName",
+          key: "companyName",
+        },
+      ],
+    },
+  ];
+
+  render(<Table dataSource={_dataSource} columns={_columns} searchable />);
+  expect(
+    screen.getByText((_dataSource[0] as any).companyName)
+  ).toBeInTheDocument();
+  expect(
+    screen.getByText((_dataSource[0] as any).companyAddress)
+  ).toBeInTheDocument();
+
+  const searchBox = screen.getByPlaceholderText(/search/i);
+  expect(searchBox).toBeInTheDocument();
+
+  userEvent.type(searchBox, "test_company");
+  expect(screen.queryByText("test_companyAddress")).toBeInTheDocument();
+});

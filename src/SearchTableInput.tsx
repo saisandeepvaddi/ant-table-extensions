@@ -29,13 +29,38 @@ export interface ISearchTableInputProps {
   fuseProps?: Fuse.IFuseOptions<any>;
 }
 
-const createDefaultFuseKeys = (dataSource: any[], columns: any) => {
+const getGroupedColumnKeysFromChildren = (column: any, keys = []) => {
+  for (const child of column.children) {
+    if (child.children && Array.isArray(child.children)) {
+      // If child has children, recurse
+      keys = getGroupedColumnKeysFromChildren(child, keys);
+    } else {
+      if (!child.dataIndex) {
+        continue;
+      }
+
+      if (Array.isArray(child.dataIndex)) {
+        keys = [...keys, child.dataIndex.join(".")];
+        continue;
+      }
+
+      keys = [...keys, child.dataIndex];
+    }
+  }
+
+  return keys;
+};
+
+const createDefaultFuseKeys = (dataSource: any[], columns: any[]) => {
   const firstRecord = dataSource?.[0];
   const keys = columns
-    .filter(column => !!column.dataIndex)
     .map(column => {
-      const { dataIndex } = column;
-
+      const { dataIndex, children } = column;
+      // check if grouped column
+      if (children && Array.isArray(children)) {
+        const keys = getGroupedColumnKeysFromChildren(column, []);
+        return keys?.flat();
+      }
       // ant table allows nested objects with array of strings as dataIndex
       if (Array.isArray(dataIndex)) {
         return dataIndex.join(".");
@@ -54,7 +79,10 @@ const createDefaultFuseKeys = (dataSource: any[], columns: any) => {
         );
       }
       return dataIndex;
-    });
+    })
+    .filter(dataIndex => !!dataIndex)
+    .flat(10)
+    .filter(dataIndex => typeof dataIndex === "string"); // after flattening max depth 10, if there are still arrays, ignore
 
   return keys;
 };
