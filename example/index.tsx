@@ -68,12 +68,7 @@ const App = () => {
   return (
     <div>
       {/* <TableOld dataSource={dataSource} columns={columns} searchable /> */}
-      <TableNew
-        dataSource={dataSource}
-        columns={columns}
-        searchable
-        // searchableProps={{ fuzzySearch: true }}
-      />
+      <TableNew dataSource={dataSource} columns={columns} searchable />
     </div>
   );
 };

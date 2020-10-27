@@ -105,9 +105,9 @@ export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
 
   const _fuseProps = React.useMemo(() => {
     return {
-      ...fuseProps,
       keys: createDefaultFuseKeys(dataSource, columns),
       threshold: fuzzySearch ? 0.6 : 0,
+      ...fuseProps,
     };
   }, [fuseProps, dataSource, columns, fuzzySearch]);
 
