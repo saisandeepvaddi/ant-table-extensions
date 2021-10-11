@@ -1,10 +1,10 @@
 import * as React from "react";
 import {
-  Table,
-  ITableProps,
   ExportTableButton,
-  SearchTableInput,
   ITableExportFields,
+  ITableProps,
+  SearchTableInput,
+  Table,
 } from "../src";
 import { FileExcelOutlined, SearchOutlined } from "@ant-design/icons";
 import { columns, dataSource } from "../fixtures/table";
@@ -12,7 +12,6 @@ import { columns, dataSource } from "../fixtures/table";
 //   ITableExportFields,
 // } from "../src/ExportTableButton";
 // import SearchTableInput from "../src/SearchTableInput";
-
 import "antd/dist/antd.compact.min.css";
 // import { ITableExportFields } from "../src/ExportTableButton";
 
@@ -107,6 +106,34 @@ export const CustomExportButton = () => {
         },
       }}
     />
+  );
+};
+
+export const CustomCsvConfig = () => {
+  return (
+    <React.Fragment>
+      <p>
+        Customize CSV format (delimiter, new line, ...)
+        <br />
+        <b>NOTE:</b> Use PapaParse config format. cf.
+        <a
+          href="https://www.papaparse.com/docs#json-to-csv"
+          rel="noreferrer"
+          target="_blank"
+        >
+          https://www.papaparse.com/docs#json-to-csv
+        </a>
+      </p>
+      <Table
+        dataSource={dataSource}
+        columns={columns}
+        exportable
+        exportableProps={{
+          showColumnPicker: true,
+          csvConfig: { delimiter: ";" },
+        }}
+      />
+    </React.Fragment>
   );
 };
 
