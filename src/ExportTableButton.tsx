@@ -34,6 +34,19 @@ export interface IExportFieldButtonProps {
   children?: ReactChild | ReactNode;
   /** Shows a modal to pick which columns to include exported file. */
   showColumnPicker?: boolean;
+  /** Customize CSV format, Use PapaParse config format ; cf. https://www.papaparse.com/docs#json-to-csv  */
+  csvConfig?: {
+    quotes?: boolean | boolean[],
+    quoteChar?: string,
+    escapeChar?: string,
+    delimiter?: string,
+    header?: boolean,
+    newline?: string,
+    skipEmptyLines?: boolean, //other option is 'greedy', meaning skip delimiters, quotes, and whitespace.
+    greedy?: boolean, //other option is 'greedy', meaning skip delimiters, quotes, and whitespace.
+    columns?: null | string[] //or array of strings
+  }
+
 }
 
 type ColumnWithDataIndex = (ColumnGroupType<any> | ColumnType<any>) & {
@@ -93,6 +106,10 @@ export const ExportTableButton: React.FC<IExportFieldButtonProps> = props => {
     btnProps,
     columns = [],
     showColumnPicker = false,
+    csvConfig = {
+      greedy: true,
+      header: false,
+    }
   } = props;
 
   const [showModal, setShowModal] = React.useState(false);
@@ -132,10 +149,7 @@ export const ExportTableButton: React.FC<IExportFieldButtonProps> = props => {
       selectedFieldsInOriginalOrder
     );
 
-    const csv = Papa.unparse(data, {
-      greedy: true,
-      header: false,
-    });
+    const csv = Papa.unparse(data, csvConfig);
     const blob = new Blob([csv]);
     const a = window.document.createElement("a");
     a.href = window.URL.createObjectURL(blob);
