@@ -3,7 +3,7 @@ import { Table as AntTable } from "antd";
 import ExportTableButton from "./ExportTableButton";
 import { ITableProps } from "./index";
 
-export const ExportableTable: React.FC<ITableProps<any>> = props => {
+export const ExportableTable: React.FC<ITableProps<any>> = (props) => {
   const { dataSource, columns, exportableProps } = props;
 
   return (

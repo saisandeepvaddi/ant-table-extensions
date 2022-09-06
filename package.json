@@ -27,6 +27,7 @@
     "build": "tsdx build",
     "test": "cross-env DEBUG_PRINT_LIMIT=50 && tsdx test --passWithNoTests",
     "lint": "tsdx lint src stories",
+    "lint:fix": "tsdx lint src stories --fix",
     "prepare": "tsdx build",
     "storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider start-storybook -p 6006",
     "build-storybook": "build-storybook",

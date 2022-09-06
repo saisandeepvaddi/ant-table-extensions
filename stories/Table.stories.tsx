@@ -71,7 +71,7 @@ export const CustomizeExportData = () => {
     },
     country: {
       header: "Your Country",
-      formatter: fieldValue => {
+      formatter: (fieldValue) => {
         return "-->  " + fieldValue;
       },
     },

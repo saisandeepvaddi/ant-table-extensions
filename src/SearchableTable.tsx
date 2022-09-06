@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import SearchTableInput from "./SearchTableInput";
 import { Table as AntTable, Row, Col } from "antd";
 
-export const SearchableTable = props => {
+export const SearchableTable = (props) => {
   const { dataSource, columns, ...otherProps } = props;
   const [searchDataSource, setSearchDataSource] = useState<any>(dataSource);
 

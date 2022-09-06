@@ -62,7 +62,7 @@ const cleanupDataSource = (
   }
 
   const newData = [...dataSource];
-  const fields = selectedFields.map(fieldName => {
+  const fields = selectedFields.map((fieldName) => {
     const fieldValue = get(exportFieldNames, fieldName);
     if (typeof fieldValue === "string") {
       return fieldValue;
@@ -71,7 +71,7 @@ const cleanupDataSource = (
   });
 
   const data = newData.map((record, rowIndex) => {
-    return selectedFields.map(fieldName => {
+    return selectedFields.map((fieldName) => {
       const fieldValue = get(exportFieldNames, fieldName);
       const recordValue = get(record, fieldName);
       if (typeof fieldValue === "string") {
@@ -84,7 +84,7 @@ const cleanupDataSource = (
   return [fields, ...data];
 };
 
-export const ExportTableButton: React.FC<IExportFieldButtonProps> = props => {
+export const ExportTableButton: React.FC<IExportFieldButtonProps> = (props) => {
   const {
     dataSource,
     fileName,
@@ -123,7 +123,7 @@ export const ExportTableButton: React.FC<IExportFieldButtonProps> = props => {
     }
 
     let selectedFieldsInOriginalOrder = Object.keys(fieldsOrColumns).filter(
-      name => selectedFields.indexOf(name) > -1
+      (name) => selectedFields.indexOf(name) > -1
     );
 
     const data = cleanupDataSource(
@@ -195,7 +195,7 @@ export const ExportTableButton: React.FC<IExportFieldButtonProps> = props => {
                   style={{ padding: 0, margin: 0 }}
                   defaultChecked={true}
                   checked={selectedFields.indexOf(key) > -1}
-                  onChange={e => handleCheckboxChange(key, e.target.checked)}
+                  onChange={(e) => handleCheckboxChange(key, e.target.checked)}
                 >
                   {typeof value === "string" ? value : value?.header ?? ""}
                 </Checkbox>
