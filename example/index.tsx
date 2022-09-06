@@ -1,11 +1,12 @@
 import "react-app-polyfill/ie11";
 import * as React from "react";
-import * as ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import "antd/dist/antd.css";
 import { Table as TableOld } from "ant-table-extensions";
 import { Table as TableNew } from "../src/index";
 
 import { dataSource, columns } from "./fixtures/groupedColumns";
+import { ColumnsType } from "antd/lib/table";
 // const _dataSource = dataSource.map(data => {
 //   const { name, visited_city, phone_nr } = data;
 //   return {
@@ -68,9 +69,20 @@ const App = () => {
   return (
     <div>
       {/* <TableOld dataSource={dataSource} columns={columns} searchable /> */}
-      <TableNew dataSource={dataSource} columns={columns} searchable />
+      <TableNew
+        dataSource={dataSource}
+        columns={columns as ColumnsType<any>}
+        searchable
+        exportable
+      />
     </div>
   );
 };
 
-ReactDOM.render(<App />, document.getElementById("root"));
+const container = document.getElementById("root");
+if (!container) {
+  throw new Error("No 'root' container found");
+}
+const root = createRoot(container);
+
+root.render(<App />);

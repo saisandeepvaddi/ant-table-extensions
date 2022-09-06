@@ -5,6 +5,8 @@ import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/extend-expect";
 import { Table } from "../src";
 
+const user = userEvent.setup();
+
 // tests using ant not working without it.
 Object.defineProperty(window, "matchMedia", {
   writable: true,
@@ -90,7 +92,7 @@ test("Searches in searchable table", async () => {
   expect(screen.getByText(dataSource[1].lastName)).toBeInTheDocument();
   const searchBox = screen.getByPlaceholderText(/search/i);
   expect(searchBox).toBeInTheDocument();
-  userEvent.type(searchBox, dataSource[1].lastName);
+  user.type(searchBox, dataSource[1].lastName);
   await waitFor(() =>
     expect(screen.queryByText(dataSource[0].lastName)).not.toBeInTheDocument()
   );
@@ -105,7 +107,7 @@ test("Searches in modified dataSource", async () => {
   expect(screen.getByText(dataSource[1].lastName)).toBeInTheDocument();
   const searchBox = screen.getByPlaceholderText(/search/i);
   expect(searchBox).toBeInTheDocument();
-  userEvent.type(searchBox, dataSource[1].lastName);
+  user.type(searchBox, dataSource[1].lastName);
   await waitFor(() =>
     expect(screen.queryByText(dataSource[0].lastName)).not.toBeInTheDocument()
   );
@@ -122,8 +124,8 @@ test("Searches in modified dataSource", async () => {
   const newSearchBox = screen.getByPlaceholderText(/search/i);
   expect(newSearchBox).toBeInTheDocument();
 
-  userEvent.clear(newSearchBox);
-  userEvent.type(newSearchBox, newDataSource[1].lastName);
+  user.clear(newSearchBox);
+  user.type(newSearchBox, newDataSource[1].lastName);
 
   await waitFor(() =>
     expect(
@@ -144,7 +146,7 @@ test("Keeps results filtered if dataSource changed and input has previous value"
   const searchBox = screen.getByPlaceholderText(/search/i);
   expect(searchBox).toBeInTheDocument();
 
-  userEvent.type(searchBox, dataSource[1].lastName);
+  user.type(searchBox, dataSource[1].lastName);
   await waitFor(() =>
     expect(screen.queryByText(dataSource[0].lastName)).not.toBeInTheDocument()
   );
@@ -169,7 +171,7 @@ test("Exports csv file on export btn click", async () => {
   expect(screen.getByText(dataSource[0].country)).toBeInTheDocument();
   const btn = screen.getByRole("button", { name: /export/i });
   expect(btn).toBeInTheDocument();
-  userEvent.click(btn);
+  user.click(btn);
 
   // To avoid some window.navigation error temporarily.
   console.error = jest.fn();
@@ -206,7 +208,7 @@ test("Searches objects in dataSource in searchable", async () => {
   const searchBox = screen.getByPlaceholderText(/search/i);
   expect(searchBox).toBeInTheDocument();
 
-  userEvent.type(searchBox, "pikachu");
+  user.type(searchBox, "pikachu");
   expect(screen.queryByText("pikachu")).toBeInTheDocument();
 });
 
@@ -243,7 +245,7 @@ test("Searches tables with columns with empty dataIndex", async () => {
   const searchBox = screen.getByPlaceholderText(/search/i);
   expect(searchBox).toBeInTheDocument();
 
-  userEvent.type(searchBox, "pikachu");
+  user.type(searchBox, "pikachu");
   expect(screen.queryByText("pikachu")).toBeInTheDocument();
 });
 
@@ -290,6 +292,6 @@ test("Searches tables with grouped headers", async () => {
   const searchBox = screen.getByPlaceholderText(/search/i);
   expect(searchBox).toBeInTheDocument();
 
-  userEvent.type(searchBox, "test_company");
+  user.type(searchBox, "test_company");
   expect(screen.queryByText("test_companyAddress")).toBeInTheDocument();
 });

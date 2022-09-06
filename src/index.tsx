@@ -25,7 +25,7 @@ export type ITableUtils = {
 
 export type ITableProps<T> = TableProps<T> & ITableUtils;
 
-export const Table: React.FC<ITableProps<any>> = ({
+export function Table({
   exportable = false,
   exportableProps,
   searchable = false,
@@ -33,7 +33,7 @@ export const Table: React.FC<ITableProps<any>> = ({
   dataSource,
   columns,
   ...otherProps
-}) => {
+}: ITableProps<any>) {
   const isMounted = useMountedState();
   const isExportable = exportable || exportableProps;
   const isSearchable = searchable || searchableProps;
@@ -84,4 +84,4 @@ export const Table: React.FC<ITableProps<any>> = ({
       />
     </div>
   );
-};
+}

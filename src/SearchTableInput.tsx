@@ -9,10 +9,13 @@ export interface ISearchTableInputProps {
   /** Custom function to search if you want to use your own search.
    *  Takes dataSource and searchTerm and should return filtered dataSource.
    */
-  searchFunction?: (dataSource: any[], searchTerm: string) => any[];
+  searchFunction?: (
+    dataSource: readonly any[] | undefined,
+    searchTerm: string
+  ) => any[];
 
   /** Ant table's dataSource. */
-  dataSource?: any[];
+  dataSource?: readonly any[] | undefined;
 
   /** Ant table's columns */
   columns?: ColumnsType<any>;
@@ -51,7 +54,10 @@ const getGroupedColumnKeysFromChildren = (column: any, keys = []) => {
   return keys;
 };
 
-const createDefaultFuseKeys = (dataSource: any[], columns: any[]) => {
+const createDefaultFuseKeys = (
+  dataSource: readonly any[] | undefined,
+  columns: any[]
+) => {
   const firstRecord = dataSource?.[0];
   const keys = columns
     .map(column => {
@@ -111,7 +117,10 @@ export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
     };
   }, [fuseProps, dataSource, columns, fuzzySearch]);
 
-  const searchTable = (_dataSource: any[], searchTerm = "") => {
+  const searchTable = (
+    _dataSource: readonly any[] | undefined,
+    searchTerm = ""
+  ) => {
     if (searchTerm === "" || !fuse || !fuse.current) {
       return allData.current;
     }

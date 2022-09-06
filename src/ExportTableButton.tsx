@@ -5,7 +5,7 @@ import difference from "lodash/difference";
 import union from "lodash/union";
 import get from "lodash/get";
 import set from "lodash/set";
-import { ColumnsType, ColumnGroupType, ColumnType } from "antd/lib/table";
+import { ColumnsType, ColumnType } from "antd/lib/table";
 import { ButtonProps } from "antd/lib/button";
 
 export interface ITableExportFields {
@@ -19,7 +19,7 @@ export interface ITableExportFields {
 
 export interface IExportFieldButtonProps {
   /** Ant table's dataSource */
-  dataSource?: any[];
+  dataSource?: readonly any[] | undefined;
   /** Ant table's columns */
   columns?: ColumnsType<any>;
   /** File name to use when exporting to csv */
@@ -36,15 +36,11 @@ export interface IExportFieldButtonProps {
   showColumnPicker?: boolean;
 }
 
-type ColumnWithDataIndex = (ColumnGroupType<any> | ColumnType<any>) & {
-  dataIndex?: string | string[];
-};
-
 const getFieldsFromColumns = (
   columns: ColumnsType<any>
 ): ITableExportFields => {
   const fields = {};
-  columns?.forEach((column: ColumnWithDataIndex) => {
+  columns?.forEach((column: ColumnType<any>) => {
     const { title, key, dataIndex } = column;
     const fieldName =
       (Array.isArray(dataIndex) ? dataIndex.join(".") : dataIndex) ?? key;
@@ -56,7 +52,11 @@ const getFieldsFromColumns = (
   return fields;
 };
 
-const cleanupDataSource = (dataSource, exportFieldNames, selectedFields) => {
+const cleanupDataSource = (
+  dataSource: readonly any[],
+  exportFieldNames: ITableExportFields,
+  selectedFields: string[]
+) => {
   if (!dataSource || dataSource.length === 0) {
     return { data: [], fields: [] };
   }
@@ -77,7 +77,7 @@ const cleanupDataSource = (dataSource, exportFieldNames, selectedFields) => {
       if (typeof fieldValue === "string") {
         return recordValue;
       }
-      return fieldValue?.formatter(recordValue, record, rowIndex) || null;
+      return fieldValue?.formatter?.(recordValue, record, rowIndex) ?? null;
     });
   });
 
@@ -86,7 +86,7 @@ const cleanupDataSource = (dataSource, exportFieldNames, selectedFields) => {
 
 export const ExportTableButton: React.FC<IExportFieldButtonProps> = props => {
   const {
-    dataSource = [],
+    dataSource,
     fileName,
     fields,
     disabled,
@@ -133,7 +133,6 @@ export const ExportTableButton: React.FC<IExportFieldButtonProps> = props => {
     );
 
     const csv = Papa.unparse(data, {
-      greedy: true,
       header: false,
     });
     const blob = new Blob([csv]);
@@ -148,7 +147,7 @@ export const ExportTableButton: React.FC<IExportFieldButtonProps> = props => {
   }, [dataSource, fieldsOrColumns, selectedFields, fileName]);
 
   const handleCheckboxChange = React.useCallback(
-    (key, checked) => {
+    (key: string, checked: boolean) => {
       let newSelectedFields = [...selectedFields];
       if (checked) {
         newSelectedFields = union(newSelectedFields, [key]);
@@ -183,7 +182,7 @@ export const ExportTableButton: React.FC<IExportFieldButtonProps> = props => {
             title:
               selectedFields.length < 1
                 ? "Please select at least one column."
-                : null,
+                : undefined,
           }}
           okText={"Export"}
           title={"Select columns to export"}
