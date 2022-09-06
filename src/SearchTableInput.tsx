@@ -60,7 +60,7 @@ const createDefaultFuseKeys = (
 ) => {
   const firstRecord = dataSource?.[0];
   const keys = columns
-    .map(column => {
+    .map((column) => {
       const { dataIndex, children } = column;
       // check if grouped column
       if (children && Array.isArray(children)) {
@@ -86,9 +86,9 @@ const createDefaultFuseKeys = (
       }
       return dataIndex;
     })
-    .filter(dataIndex => !!dataIndex)
+    .filter((dataIndex) => !!dataIndex)
     .flat(10)
-    .filter(dataIndex => typeof dataIndex === "string"); // after flattening max depth 10, if there are still arrays, ignore
+    .filter((dataIndex) => typeof dataIndex === "string"); // after flattening max depth 10, if there are still arrays, ignore
 
   return keys;
 };
@@ -125,7 +125,7 @@ export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
       return allData.current;
     }
 
-    const newResults = fuse.current.search(searchTerm).map(res => res.item);
+    const newResults = fuse.current.search(searchTerm).map((res) => res.item);
     return newResults;
   };
 
