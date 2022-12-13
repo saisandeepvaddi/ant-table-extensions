@@ -14,6 +14,8 @@ export interface ISearchTableInputProps {
   /** Ant table's dataSource. */
   dataSource?: any[];
 
+  onChange?: (value: string, results: any[]) => void;
+
   /** Ant table's columns */
   columns?: ColumnsType<any>;
 
@@ -98,6 +100,7 @@ export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
   fuzzySearch = false,
   columns,
   fuseProps,
+  onChange,
 }) => {
   const [query, setQuery] = useState<string>("");
   const allData = useRef<any[] | null>();
@@ -124,6 +127,7 @@ export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
     debounceFn(
       (dataSource: any, searchTerm: string, searchFn: any) => {
         const results = searchFn?.(dataSource, searchTerm);
+        onChange?.(searchTerm, results)
         setDataSource(results);
       },
       100,
@@ -136,7 +140,7 @@ export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
   );
 
   const handleInputChange = (e: { target: { value: any } }) => {
-    const value = e.target.value;
+    const value: string = e.target.value;
     setQuery(value);
 
     if (debounce) {
@@ -144,6 +148,7 @@ export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
     } else {
       const results =
         searchFunction?.(dataSource, value) ?? searchTable(dataSource, value);
+      onChange?.(value, results)
       setDataSource(results);
     }
   };

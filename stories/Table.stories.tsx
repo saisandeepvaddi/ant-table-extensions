@@ -122,6 +122,9 @@ export const CustomSeachInput = () => {
           placeholder: "Search this table...",
           prefix: <SearchOutlined />,
         },
+        onChange: (term, results) => {
+          console.log({term, results});
+        }
       }}
     />
   );
