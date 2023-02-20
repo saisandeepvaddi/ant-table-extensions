@@ -5,3 +5,4 @@ node_modules
 dist
 storybook-static
 build
+example/.parcel-cache
