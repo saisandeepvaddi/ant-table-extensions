@@ -46,7 +46,7 @@ export function Table({
   }, [isSearchable, dataSource, isMounted]);
 
   return (
-    <div>
+    <>
       <div
         style={{
           display: "flex",
@@ -82,6 +82,6 @@ export function Table({
         columns={columns}
         {...otherProps}
       />
-    </div>
+    </>
   );
 }
