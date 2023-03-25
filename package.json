@@ -24,9 +24,6 @@
   },
   "homepage": "https://github.com/saisandeepvaddi/ant-table-extensions",
   "license": "MIT",
-  "engines": {
-    "node": ">=10"
-  },
   "scripts": {
     "start": "vite --watch",
     "build": "vite build",
