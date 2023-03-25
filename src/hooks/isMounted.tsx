@@ -1,11 +1,11 @@
 import { useEffect, useRef, useCallback } from "react";
 
-export function useMountedState() {
+export function useMountedState(): () => boolean {
   const ref = useRef(false);
   const state = useCallback(() => ref.current, []);
   useEffect(() => {
     ref.current = true;
-    return () => {
+    return (): void => {
       ref.current = false;
     };
   });

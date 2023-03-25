@@ -1,6 +1,19 @@
 {
   "name": "ant-table-extensions",
   "version": "1.1.7",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "dist/ant-table-extensions.umd.cjs",
+  "module": "dist/ant-table-extensions.js",
+  "exports": {
+    ".": {
+      "import": "./dist/ant-table-extensions.js",
+      "require": "./dist/ant-table-extensions.umd.cjs"
+    }
+  },
+  "typings": "dist/index.d.ts",
   "author": {
     "name": "Sai Sandeep Vaddi",
     "url": "https://saisandeepvaddi.com"
@@ -11,23 +24,14 @@
   },
   "homepage": "https://github.com/saisandeepvaddi/ant-table-extensions",
   "license": "MIT",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
-  "files": [
-    "dist",
-    "package.json",
-    "LICENSE",
-    "README.md"
-  ],
   "engines": {
     "node": ">=10"
   },
   "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build",
-    "test": "cross-env DEBUG_PRINT_LIMIT=50 && tsdx test --passWithNoTests",
-    "lint": "tsdx lint src stories",
-    "prepare": "tsdx build",
+    "start": "vite --watch",
+    "build": "vite build",
+    "test": "cross-env DEBUG_PRINT_LIMIT=50 && jest test --passWithNoTests",
+    "lint": "./node_modules/.bin/eslint src stories",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "example:start": "cd ./example && yarn start"
@@ -41,7 +45,7 @@
     "testEnvironment": "jest-environment-jsdom-fifteen"
   },
   "peerDependencies": {
-    "antd": "^4.x",
+    "antd": ">=4.x",
     "react": ">=16.8"
   },
   "prettier": {
@@ -50,41 +54,42 @@
     "singleQuote": false,
     "trailingComma": "es5"
   },
-  "module": "dist/ant-table-extensions.esm.js",
   "devDependencies": {
-    "@ant-design/icons": "4.3.0",
-    "@babel/core": "7.11.1",
-    "@storybook/addon-actions": "6.1.2",
-    "@storybook/addon-docs": "5.3.21",
+    "@ant-design/icons": "5.0.1",
+    "@babel/core": "7.21.3",
+    "@storybook/addon-actions": "6.5.16",
+    "@storybook/addon-docs": "6.5.16",
     "@storybook/addon-essentials": "6.1.2",
     "@storybook/addon-info": "5.3.21",
-    "@storybook/addon-links": "6.1.2",
-    "@storybook/addons": "5.3.21",
-    "@storybook/react": "6.1.2",
-    "@testing-library/jest-dom": "5.11.6",
-    "@testing-library/react": "10.4.9",
-    "@testing-library/user-event": "12.2.2",
-    "@types/lodash": "4.14.165",
-    "@types/react": "16.14.1",
-    "@types/react-dom": "16.9.10",
-    "antd": "4.8.4",
-    "babel-loader": "8.1.0",
-    "cross-env": "7.0.2",
+    "@storybook/addon-links": "6.5.16",
+    "@storybook/addons": "6.5.16",
+    "@storybook/react": "6.5.16",
+    "@testing-library/jest-dom": "5.16.5",
+    "@testing-library/react": "14.0.0",
+    "@testing-library/user-event": "14.4.3",
+    "@types/lodash": "4.14.191",
+    "@types/papaparse": "^5.3.7",
+    "@types/react": "18.0.29",
+    "@types/react-dom": "18.0.11",
+    "antd": "5.3.2",
+    "babel-loader": "9.1.2",
+    "cross-env": "7.0.3",
     "identity-obj-proxy": "3.0.0",
     "jest-environment-jsdom-fifteen": "1.0.2",
-    "react": "16.14.0",
+    "react": "18.2.0",
     "react-docgen-typescript-loader": "3.7.2",
-    "react-dom": "16.14.0",
-    "react-is": "16.13.1",
-    "ts-loader": "8.0.11",
+    "react-dom": "18.2.0",
+    "react-is": "18.2.0",
+    "ts-loader": "9.4.2",
     "tsdx": "0.14.1",
-    "tslib": "2.0.3",
-    "typescript": "4.1.2"
+    "tslib": "2.5.0",
+    "typescript": "5.0.2",
+    "vite": "^4.2.1"
   },
   "dependencies": {
-    "fuse.js": "^6.4.1",
-    "lodash": "^4.17.20",
-    "lodash-es": "^4.17.15",
-    "papaparse": "^5.2.0"
+    "fuse.js": "^6.6.2",
+    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
+    "papaparse": "^5.4.1"
   }
 }

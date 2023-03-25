@@ -1,31 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Table as AntTable } from "antd";
-import { TableProps } from "antd/lib/table";
-import ExportTableButton, {
-  IExportFieldButtonProps,
-} from "./ExportTableButton";
-import SearchTableInput, { ISearchTableInputProps } from "./SearchTableInput";
+import ExportTableButton from "./ExportTableButton";
+import SearchTableInput from "./SearchTableInput";
 import { useMountedState } from "./hooks/isMounted";
+import { TableProps } from "./types";
 
-export * from "./ExportTableButton";
-export * from "./SearchTableInput";
-
-export type IExportableTableProps = TableProps<any> & IExportFieldButtonProps;
-
-export type ITableUtils = {
-  /** Exportable Table */
-  exportable?: boolean;
-  /** Props object to customize export button */
-  exportableProps?: IExportFieldButtonProps;
-  /** Searchable Table */
-  searchable?: boolean;
-  /** Props object to customize export button */
-  searchableProps?: ISearchTableInputProps;
-};
-
-export type ITableProps<T> = TableProps<T> & ITableUtils;
-
-export const Table: React.FC<ITableProps<any>> = ({
+export const Table: React.FC<TableProps<any>> = ({
   exportable = false,
   exportableProps,
   searchable = false,

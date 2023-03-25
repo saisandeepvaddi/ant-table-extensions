@@ -2,56 +2,38 @@ import React, { useState, useRef, useEffect } from "react";
 import { Input } from "antd";
 import debounceFn from "lodash/debounce";
 import Fuse from "fuse.js";
-import { InputProps } from "antd/lib/input";
-import { ColumnsType } from "antd/lib/table";
+import { SearchTableInputProps } from "./types";
 
-export interface ISearchTableInputProps {
-  /** Custom function to search if you want to use your own search.
-   *  Takes dataSource and searchTerm and should return filtered dataSource.
-   */
-  searchFunction?: (dataSource: any[], searchTerm: string) => any[];
-
-  /** Ant table's dataSource. */
-  dataSource?: any[];
-
-  /** Ant table's columns */
-  columns?: ColumnsType<any>;
-
-  /** `setState` style function which updates dataSource. */
-  setDataSource?: (dataSource: any[]) => void;
-  /** Debounces search  */
-  debounce?: boolean;
-  /** Any of Ant Input component's props as object. */
-  inputProps?: InputProps;
-  /** Allow fuzzy search or search for exact search term. */
-  fuzzySearch?: boolean;
-  /** Uses Fuse.js for search. Pass any of fuse.js options here as object. */
-  fuseProps?: Fuse.IFuseOptions<any>;
-}
-
-const getGroupedColumnKeysFromChildren = (column: any, keys = []) => {
+const getGroupedColumnKeysFromChildren = (
+  column: any,
+  keys: any[] = []
+): any[] => {
+  let newKeys = [];
   for (const child of column.children) {
     if (child.children && Array.isArray(child.children)) {
       // If child has children, recurse
-      keys = getGroupedColumnKeysFromChildren(child, keys);
+      newKeys = getGroupedColumnKeysFromChildren(child, keys);
     } else {
       if (!child.dataIndex) {
         continue;
       }
 
       if (Array.isArray(child.dataIndex)) {
-        keys = [...keys, child.dataIndex.join(".")];
+        newKeys = [...keys, child.dataIndex.join(".")];
         continue;
       }
 
-      keys = [...keys, child.dataIndex];
+      newKeys = [...keys, child.dataIndex];
     }
   }
 
-  return keys;
+  return newKeys;
 };
 
-const createDefaultFuseKeys = (dataSource: any[], columns: any[]) => {
+const createDefaultFuseKeys = (
+  dataSource: readonly any[],
+  columns: any[]
+): any[] => {
   const firstRecord = dataSource?.[0];
   const keys = columns
     .map(column => {
@@ -87,20 +69,20 @@ const createDefaultFuseKeys = (dataSource: any[], columns: any[]) => {
   return keys;
 };
 
-export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
+export const SearchTableInput: React.FC<SearchTableInputProps> = ({
   searchFunction = null,
-  dataSource,
+  dataSource = [],
   setDataSource,
   debounce = true,
   inputProps = {
     placeholder: "Search...",
   },
   fuzzySearch = false,
-  columns,
+  columns = [],
   fuseProps,
 }) => {
   const [query, setQuery] = useState<string>("");
-  const allData = useRef<any[] | null>();
+  const allData = useRef<any[] | null>([]);
   const fuse = useRef<Fuse<any> | null>();
 
   const _fuseProps = React.useMemo(() => {
@@ -111,9 +93,9 @@ export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
     };
   }, [fuseProps, dataSource, columns, fuzzySearch]);
 
-  const searchTable = (_dataSource: any[], searchTerm = "") => {
+  const searchTable = (_dataSource: readonly any[], searchTerm = ""): any[] => {
     if (searchTerm === "" || !fuse || !fuse.current) {
-      return allData.current;
+      return allData.current ?? [];
     }
 
     const newResults = fuse.current.search(searchTerm).map(res => res.item);
@@ -124,7 +106,7 @@ export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
     debounceFn(
       (dataSource: any, searchTerm: string, searchFn: any) => {
         const results = searchFn?.(dataSource, searchTerm);
-        setDataSource(results);
+        setDataSource?.(results);
       },
       100,
       {
@@ -135,7 +117,7 @@ export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
     []
   );
 
-  const handleInputChange = (e: { target: { value: any } }) => {
+  const handleInputChange = (e: { target: { value: any } }): void => {
     const value = e.target.value;
     setQuery(value);
 
@@ -144,7 +126,7 @@ export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
     } else {
       const results =
         searchFunction?.(dataSource, value) ?? searchTable(dataSource, value);
-      setDataSource(results);
+      setDataSource?.(results as any[]);
     }
   };
 
@@ -169,7 +151,7 @@ export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
     } else {
       const results =
         searchFunction?.(dataSource, query) ?? searchTable(dataSource, query);
-      setDataSource(results);
+      setDataSource?.(results as any);
     }
   }, [
     query,
