@@ -46,7 +46,8 @@
   },
   "peerDependencies": {
     "antd": ">=4.x",
-    "react": ">=16.8"
+    "react": ">=16.9.0",
+    "react-dom": ">=16.9.0"
   },
   "prettier": {
     "printWidth": 80,
@@ -89,7 +90,6 @@
   "dependencies": {
     "fuse.js": "^6.6.2",
     "lodash": "^4.17.21",
-    "lodash-es": "^4.17.21",
     "papaparse": "^5.4.1"
   }
 }

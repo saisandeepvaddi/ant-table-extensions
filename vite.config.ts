@@ -2,7 +2,6 @@ import { defineConfig } from "vite";
 import packateJson from "./package.json";
 
 export default defineConfig({
-  base: "./",
   build: {
     lib: {
       entry: "src/index.ts",
@@ -10,10 +9,12 @@ export default defineConfig({
       fileName: packateJson.name,
     },
     rollupOptions: {
-      external: ["react"],
+      external: ["react", "react-dom", "antd"],
       output: {
         globals: {
           react: "React",
+          "react-dom": "ReactDOM",
+          antd: "antd",
         },
       },
     },

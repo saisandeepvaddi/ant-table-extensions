@@ -24,7 +24,6 @@ specifiers:
   identity-obj-proxy: 3.0.0
   jest-environment-jsdom-fifteen: 1.0.2
   lodash: ^4.17.21
-  lodash-es: ^4.17.21
   papaparse: ^5.4.1
   react: 18.2.0
   react-docgen-typescript-loader: 3.7.2
@@ -39,7 +38,6 @@ specifiers:
 dependencies:
   fuse.js: 6.6.2
   lodash: 4.17.21
-  lodash-es: 4.17.21
   papaparse: 5.4.1
 
 devDependencies:
@@ -11949,6 +11947,7 @@ packages:
 
   /lodash-es/4.17.21:
     resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+    dev: true
 
   /lodash.debounce/4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}

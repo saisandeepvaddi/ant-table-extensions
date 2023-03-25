@@ -1,8 +1,6 @@
 import React, { Fragment, useEffect } from "react";
 import { Button, Modal, Checkbox } from "antd";
-import Papa from "papaparse";
-import difference from "lodash/difference";
-import union from "lodash/union";
+import { unparse } from "papaparse";
 import get from "lodash/get";
 import set from "lodash/set";
 import { ColumnsType } from "antd/lib/table";
@@ -104,7 +102,7 @@ export const ExportTableButton: React.FC<ExportFieldButtonProps> = props => {
       selectedFieldsInOriginalOrder
     );
 
-    const csv = Papa.unparse(data, {
+    const csv = unparse(data, {
       skipEmptyLines: 'greedy',
       header: false,
     });
@@ -123,9 +121,9 @@ export const ExportTableButton: React.FC<ExportFieldButtonProps> = props => {
     (key: string, checked: boolean) => {
       let newSelectedFields = [...selectedFields];
       if (checked) {
-        newSelectedFields = union(newSelectedFields, [key]);
+        newSelectedFields = Array.from(new Set([...newSelectedFields, key]));
       } else {
-        newSelectedFields = difference(newSelectedFields, [key]);
+        newSelectedFields = newSelectedFields.filter(field => field !== key)
       }
 
       setSelectedFields(newSelectedFields);
