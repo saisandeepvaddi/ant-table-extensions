@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Table as AntTable } from "antd";
 import ExportTableButton from "./ExportTableButton";
 import SearchTableInput from "./SearchTableInput";
-import { useMountedState } from "./hooks/isMounted";
+
 import { TableProps } from "./types";
 
 export const Table: React.FC<TableProps<any>> = ({
@@ -14,16 +14,15 @@ export const Table: React.FC<TableProps<any>> = ({
   columns,
   ...otherProps
 }) => {
-  const isMounted = useMountedState();
   const isExportable = exportable || exportableProps;
   const isSearchable = searchable || searchableProps;
   const [searchDataSource, setSearchDataSource] = useState<any>(dataSource);
 
-  useEffect(() => {
-    if (isSearchable && isMounted()) {
-      setSearchDataSource(dataSource);
-    }
-  }, [isSearchable, dataSource, isMounted]);
+  // useEffect(() => {
+  //   if (isSearchable && isMounted()) {
+  //     setSearchDataSource(dataSource);
+  //   }
+  // }, [isSearchable, dataSource, isMounted]);
 
   return (
     <div>
