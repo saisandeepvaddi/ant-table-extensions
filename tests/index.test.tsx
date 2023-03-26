@@ -2,6 +2,7 @@ import React from "react";
 import { columns, dataSource } from "../fixtures/table";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import "@testing-library/jest-dom";
 import "@testing-library/jest-dom/extend-expect";
 import { Table } from "../src";
 
