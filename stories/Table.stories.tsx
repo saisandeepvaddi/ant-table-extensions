@@ -1,20 +1,15 @@
 import * as React from "react";
 import {
   Table,
-  ITableProps,
+  TableProps,
   ExportTableButton,
   SearchTableInput,
-  ITableExportFields,
+  TableExportFields,
 } from "../src";
 import { FileExcelOutlined, SearchOutlined } from "@ant-design/icons";
 import { columns, dataSource } from "../fixtures/table";
-// import ExportTableButton, {
-//   ITableExportFields,
-// } from "../src/ExportTableButton";
-// import SearchTableInput from "../src/SearchTableInput";
 
-import "antd/dist/antd.compact.min.css";
-// import { ITableExportFields } from "../src/ExportTableButton";
+import "antd/dist/reset.css";
 
 export default {
   component: Table,
@@ -24,7 +19,7 @@ export default {
 // // By passing optional props to this story, you can control the props of the component when
 // // you consume the story in a test.
 
-export const Default = (props: ITableProps<any>) => {
+export const Default = (props: TableProps<any>) => {
   // Default table. Same as Ant Table
   return <Table dataSource={dataSource} columns={columns} {...props} />;
 };
@@ -61,7 +56,7 @@ export const CustomizeExportData = () => {
    * }
    *
    */
-  const fields: ITableExportFields = {
+  const fields: TableExportFields = {
     firstName: "Name",
     fullName: {
       header: "Full Name",
