@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import packateJson from "./package.json";
+import dts from "vite-plugin-dts";
 
 export default defineConfig({
   build: {
@@ -19,4 +20,5 @@ export default defineConfig({
       },
     },
   },
+  plugins: [dts()],
 });

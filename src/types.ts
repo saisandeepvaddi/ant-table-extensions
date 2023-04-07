@@ -2,7 +2,7 @@ import { ButtonProps, InputProps } from "antd";
 import { ColumnGroupType, ColumnsType, ColumnType } from "antd/es/table";
 import { TableProps as AntTableProps } from "antd/lib/table";
 import { ReactNode } from "react";
-import IFuseOptions from "fuse.js";
+import Fuse from "fuse.js";
 
 export interface TableExportFields {
   [dataIndex: string]:
@@ -63,7 +63,7 @@ export interface SearchTableInputProps {
   /** Allow fuzzy search or search for exact search term. */
   fuzzySearch?: boolean;
   /** Uses Fuse.js for search. Pass any of fuse.js options here as object. */
-  fuseProps?: IFuseOptions<any>;
+  fuseProps?: Fuse.IFuseOptions<any>;
 }
 
 /**@deprecated Removed `I` prefix for interfaces. Use SearchTableInputProps. */

@@ -7,6 +7,7 @@
   ],
   "main": "dist/ant-table-extensions.umd.cjs",
   "module": "dist/ant-table-extensions.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/ant-table-extensions.js",
@@ -86,7 +87,8 @@
     "ts-loader": "9.4.2",
     "tslib": "2.5.0",
     "typescript": "5.0.2",
-    "vite": "^4.2.1"
+    "vite": "^4.2.1",
+    "vite-plugin-dts": "^2.2.0"
   },
   "dependencies": {
     "fuse.js": "^6.6.2",
