@@ -47,7 +47,7 @@ export const Table: React.FC<ITableProps<any>> = ({
 
   return (
     <div>
-      <div
+      <div className='antd-extension-section'
         style={{
           display: "flex",
           justifyContent: "space-between",
