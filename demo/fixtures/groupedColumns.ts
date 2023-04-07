@@ -88,7 +88,19 @@ export const columns: ColumnsType<any> = [
   },
 ];
 
-export const dataSource: any[] = [];
+export interface Item {
+  key: number;
+  name: string;
+  age: number;
+  street: string;
+  building: string;
+  number: number;
+  companyAddress: string;
+  companyName: string;
+  gender: string;
+}
+
+export const dataSource: Item[] = [];
 for (let i = 0; i < 100; i++) {
   dataSource.push({
     key: i,

@@ -1,16 +1,16 @@
 import "./App.css";
 import { Table as TableNew } from "ant-table-extensions";
-import { dataSource, columns } from "../fixtures/groupedColumns";
+import { dataSource, columns, Item } from "../fixtures/groupedColumns";
 
 function App(): JSX.Element {
   return (
-    <TableNew
+    <TableNew<Item>
       dataSource={dataSource}
       columns={columns}
       searchable
       searchableProps={{
         searchFunction(dataSource, searchTerm) {
-          return dataSource.filter((row) => {
+          return (dataSource ?? []).filter((row) => {
             return Object.values(row).some((val) => {
               let str =
                 typeof val === "string"

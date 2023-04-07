@@ -3,10 +3,10 @@ import { Table as AntTable } from "antd";
 import ExportTableButton from "./ExportTableButton";
 import SearchTableInput from "./SearchTableInput";
 
-import { TableProps } from "./types";
+import { TableProps, DataSource } from "./types";
 import { useIsMounted } from "./hooks/useIsMounted";
 
-export const Table: React.FC<TableProps<any>> = ({
+export function Table<T extends object = DataSource>({
   exportable = false,
   exportableProps,
   searchable = false,
@@ -14,7 +14,7 @@ export const Table: React.FC<TableProps<any>> = ({
   dataSource,
   columns,
   ...otherProps
-}) => {
+}: TableProps<T>) {
   const isExportable = exportable || exportableProps;
   const isSearchable = searchable || searchableProps;
   const [searchDataSource, setSearchDataSource] = useState<any>(dataSource);
@@ -58,11 +58,11 @@ export const Table: React.FC<TableProps<any>> = ({
           />
         ) : null}
       </div>
-      <AntTable
+      <AntTable<T>
         dataSource={isSearchable ? searchDataSource : dataSource}
         columns={columns}
         {...otherProps}
       />
     </div>
   );
-};
+}

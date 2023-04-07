@@ -1,8 +1,23 @@
 import { ButtonProps, InputProps } from "antd";
-import { ColumnGroupType, ColumnsType, ColumnType } from "antd/es/table";
+import { ColumnGroupType, ColumnType } from "antd/es/table";
 import { TableProps as AntTableProps } from "antd/lib/table";
 import { ReactNode } from "react";
 import Fuse from "fuse.js";
+
+export type DataSource = any;
+
+type CustomDataSourceType<T> = TableProps<T>["dataSource"];
+
+export interface TableProps<T> extends AntTableProps<T> {
+  /** Exportable Table */
+  exportable?: boolean;
+  /** Props object to customize export button */
+  exportableProps?: ExportFieldButtonProps;
+  /** Searchable Table */
+  searchable?: boolean;
+  /** Props object to customize export button */
+  searchableProps?: SearchTableInputProps;
+}
 
 export interface TableExportFields {
   [dataIndex: string]:
@@ -16,11 +31,11 @@ export interface TableExportFields {
 /**@deprecated Removed `I` prefix for interfaces. Use TableExportFields. */
 export type ITableExportFields = TableExportFields;
 
-export interface ExportFieldButtonProps {
+export interface ExportFieldButtonProps<T = DataSource> {
   /** Ant table's dataSource */
-  dataSource?: readonly any[];
+  dataSource?: TableProps<T>["dataSource"];
   /** Ant table's columns */
-  columns?: ColumnsType<any>;
+  columns?: TableProps<T>["columns"];
   /** File name to use when exporting to csv */
   fileName?: string;
   /** Customize csv file like column header names, fields to include/exclude. More on this below. */
@@ -38,24 +53,30 @@ export interface ExportFieldButtonProps {
 /**@deprecated Removed `I` prefix for interfaces. Use ExportFieldButtonProps. */
 export type IExportFieldButtonProps = ExportFieldButtonProps;
 
-export type ColumnWithDataIndex = (ColumnGroupType<any> | ColumnType<any>) & {
+export type ColumnWithDataIndex<T = DataSource> = (
+  | ColumnGroupType<T>
+  | ColumnType<T>
+) & {
   dataIndex?: string | string[];
 };
 
-export interface SearchTableInputProps {
+export interface SearchTableInputProps<T = DataSource> {
   /** Custom function to search if you want to use your own search.
    *  Takes dataSource and searchTerm and should return filtered dataSource.
    */
-  searchFunction?: (dataSource: readonly any[], searchTerm: string) => any[];
+  searchFunction?: (
+    dataSource: CustomDataSourceType<T>,
+    searchTerm: string
+  ) => CustomDataSourceType<T>;
 
   /** Ant table's dataSource. */
-  dataSource?: readonly any[];
+  dataSource?: CustomDataSourceType<T>;
 
   /** Ant table's columns */
-  columns?: ColumnsType<any>;
+  columns?: TableProps<T>["columns"];
 
   /** `setState` style function which updates dataSource. */
-  setDataSource?: (dataSource: any[]) => void;
+  setDataSource?: (dataSource: CustomDataSourceType<T>) => void;
   /** Debounces search  */
   debounce?: boolean;
   /** Any of Ant Input component's props as object. */
@@ -63,29 +84,28 @@ export interface SearchTableInputProps {
   /** Allow fuzzy search or search for exact search term. */
   fuzzySearch?: boolean;
   /** Uses Fuse.js for search. Pass any of fuse.js options here as object. */
-  fuseProps?: Fuse.IFuseOptions<any>;
+  fuseProps?: Fuse.IFuseOptions<T>;
 }
 
 /**@deprecated Removed `I` prefix for interfaces. Use SearchTableInputProps. */
 export type ISearchTableInputProps = SearchTableInputProps;
 
-export type ExportableTableProps = TableProps<any> & ExportFieldButtonProps;
+export type ExportableTableProps<T = DataSource> = TableProps<T> &
+  ExportFieldButtonProps<T>;
 
 /**@deprecated Removed `I` prefix for interfaces. Use ExportableTableProps. */
 export type IExportableTableProps = ExportableTableProps;
 
-export type ITableUtils = {
+export type ITableUtils<T = DataSource> = {
   /** Exportable Table */
   exportable?: boolean;
   /** Props object to customize export button */
-  exportableProps?: ExportFieldButtonProps;
+  exportableProps?: ExportFieldButtonProps<T>;
   /** Searchable Table */
   searchable?: boolean;
   /** Props object to customize export button */
   searchableProps?: SearchTableInputProps;
 };
-
-export type TableProps<T> = AntTableProps<T> & ITableUtils;
 
 /**@deprecated Removed `I` prefix for interfaces. Use TableProps. */
 export type ITableProps<T> = TableProps<T>;
