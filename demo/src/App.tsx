@@ -9,7 +9,22 @@ function App(): JSX.Element {
       columns={columns}
       searchable
       searchableProps={{
-        fuzzySearch: true,
+        searchFunction(dataSource, searchTerm) {
+          return dataSource.filter((row) => {
+            return Object.values(row).some((val) => {
+              let str =
+                typeof val === "string"
+                  ? val
+                  : typeof val === "number"
+                  ? val.toString()
+                  : "";
+              if (typeof val === "string" || typeof val === "number") {
+                return str.toLowerCase().includes(searchTerm.toLowerCase());
+              }
+              return false;
+            });
+          });
+        },
       }}
     />
   );
