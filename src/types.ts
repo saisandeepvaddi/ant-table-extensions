@@ -8,29 +8,6 @@ export type DataSource = any;
 
 type CustomDataSourceType<T> = TableProps<T>["dataSource"];
 
-export interface TableProps<T> extends AntTableProps<T> {
-  /** Exportable Table */
-  exportable?: boolean;
-  /** Props object to customize export button */
-  exportableProps?: ExportFieldButtonProps;
-  /** Searchable Table */
-  searchable?: boolean;
-  /** Props object to customize export button */
-  searchableProps?: SearchTableInputProps;
-}
-
-export interface TableExportFields {
-  [dataIndex: string]:
-    | string
-    | {
-        header: string;
-        formatter?: (fieldValue: any, record: any, index: number) => string;
-      };
-}
-
-/**@deprecated Removed `I` prefix for interfaces. Use TableExportFields. */
-export type ITableExportFields = TableExportFields;
-
 export interface ExportFieldButtonProps<T = DataSource> {
   /** Ant table's dataSource */
   dataSource?: TableProps<T>["dataSource"];
@@ -49,6 +26,29 @@ export interface ExportFieldButtonProps<T = DataSource> {
   /** Shows a modal to pick which columns to include exported file. */
   showColumnPicker?: boolean;
 }
+
+export interface TableProps<T> extends AntTableProps<T> {
+  /** Exportable Table */
+  exportable?: boolean;
+  /** Props object to customize export button */
+  exportableProps?: ExportFieldButtonProps<T>;
+  /** Searchable Table */
+  searchable?: boolean;
+  /** Props object to customize export button */
+  searchableProps?: SearchTableInputProps;
+}
+
+export interface TableExportFields {
+  [dataIndex: string]:
+    | string
+    | {
+        header: string;
+        formatter?: (fieldValue: any, record: any, index: number) => string;
+      };
+}
+
+/**@deprecated Removed `I` prefix for interfaces. Use TableExportFields. */
+export type ITableExportFields = TableExportFields;
 
 /**@deprecated Removed `I` prefix for interfaces. Use ExportFieldButtonProps. */
 export type IExportFieldButtonProps = ExportFieldButtonProps;

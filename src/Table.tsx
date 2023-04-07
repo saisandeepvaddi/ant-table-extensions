@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Table as AntTable } from "antd";
 import ExportTableButton from "./ExportTableButton";
 import SearchTableInput from "./SearchTableInput";
@@ -15,9 +15,18 @@ export function Table<T extends object = DataSource>({
   columns,
   ...otherProps
 }: TableProps<T>) {
-  const isExportable = exportable || exportableProps;
-  const isSearchable = searchable || searchableProps;
-  const [searchDataSource, setSearchDataSource] = useState<any>(dataSource);
+  const isExportable = useMemo(
+    () => exportable || !!exportableProps,
+    [exportable, exportableProps]
+  );
+
+  const isSearchable = useMemo(
+    () => searchable || searchableProps,
+    [searchable, searchableProps]
+  );
+  const [searchDataSource, setSearchDataSource] = useState<
+    readonly T[] | undefined
+  >(dataSource);
   const isMounted = useIsMounted();
 
   useEffect(() => {
@@ -58,7 +67,7 @@ export function Table<T extends object = DataSource>({
           />
         ) : null}
       </div>
-      <AntTable<T>
+      <AntTable
         dataSource={isSearchable ? searchDataSource : dataSource}
         columns={columns}
         {...otherProps}
