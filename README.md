@@ -7,40 +7,75 @@
   </h1>
 </p>
 
-<p align="center">
-    <a href="https://ant-table-extensions.vercel.app/?path=/docs/get-started--page"> Get Started </a>
-    | 
-    <a href="https://ant-table-extensions.vercel.app/?path=/docs/demos--default">Demos</a>
-</p>
+Extensions to `Table` component of [React Ant Design](https://ant.design/components/table/)
 
-Extensions to `Table` component of [React Ant Design Table](https://ant.design/components/table/)
-
-## Pre-requisite
-
-- `antd` (>=4 recommended)
-- React >= 16.8 (with hooks support)
+# Ant Table Extensions
 
 ## Installation
+
+> **NOTE:** This library works in a project already using React Ant Design.
+> This library **WILL NOT** import ant styles for you and your project is expected to have them imported already. Visit [ant official docs page](https://ant.design) for installation.
 
 ```shell
 npm install ant-table-extensions
 
-(or)
+  (or)
 
 yarn add ant-table-extensions
+
+> For Ant v5 support, try installing 1.1.8-alpha1 version
 ```
 
-## Note
+```diff
+// Don't forget to import ant styles
+- import { Table } from "antd";
++ import { Table } from "ant-table-extensions";
 
-This library doesn't import any styles. Please make sure you have `ant` styles already imported.
+function App() {
+  return <Table dataSource={dataSource} columns={columns} {..any other ant table props} />
+}
 
-## Get Started
+```
 
-Please check [Get Started](https://ant-table-extensions.vercel.app/?path=/docs/get-started--page) section for usage docs.
+## Props
 
-## Demos
+`ant-table-extension` adds extra props along with Ant's in-built table props.
 
-[Demos](https://ant-table-extensions.vercel.app/?path=/docs/demos--default)
+| Prop            | Description                  | Type    | default |
+| --------------- | ---------------------------- | ------- | ------- |
+| exportable      | Adds export to csv button    | boolean | false   |
+| searchable      | Adds search feature to table | boolean | false   |
+| exportableProps | Customize the export         | object  | null    |
+| searchableProps | Customize the search         | object  | null    |
+
+Plus, All of the [ant table props](https://ant.design/components/table/#API).
+
+### Prop types and their descriptions.
+
+#### exportableProps
+
+> exportable: true is optional if exportableProps are given
+
+| Prop             | Description                                                                                  | Type       | default         |
+| ---------------- | -------------------------------------------------------------------------------------------- | ---------- | --------------- |
+| fileName         | File name in exporting csv file without extension                                            | string     | `table`         |
+| fields           | Customize csv file like column header names, columns to include/exclude. More on this below. | object     | null            |
+| disabled         | Disable export button.                                                                       | boolean    | false           |
+| btnProps         | Any of Ant button component props.                                                           | object     | null            |
+| showColumnPicker | Show a modal to pick which columns to export.                                                | boolean    | false           |
+| children         | React Child node. But here can be used to change button text.                                | ReactChild | "Export to CSV" |
+
+#### searchableProps
+
+> searchable: true is optional if searchableProps are given
+
+| Prop           | Description                                                                                 | Type     | default                                                                 |
+| -------------- | ------------------------------------------------------------------------------------------- | -------- | ----------------------------------------------------------------------- |
+| debounce       | Debounce search                                                                             | boolean  | true                                                                    |
+| inputProps     | Ant Input box props                                                                         | object   | {}                                                                      |
+| fuzzySearch    | Use fuzzy search instead of exact match                                                     | boolean  | false                                                                   |
+| fuseProps      | [Fuse.js options](https://fusejs.io/api/options.html) which is used for search by default   | object   | { keys: 'dataIndex' of columns : [], threshold: fuzzySearch ? 0.6 : 0 } |
+| searchFunction | Custom search function. Takes (dataSource: any[], searchTerm: string) => filteredDataSource | function | null                                                                    |
 
 ## License
 

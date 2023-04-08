@@ -1,7 +1,9 @@
 // Taken directly from ant docs
 
+import { ColumnsType } from "antd/es/table";
+
 // To fix https://github.com/saisandeepvaddi/ant-table-extensions/issues/73
-export const columns = [
+export const columns: ColumnsType<Item> = [
   {
     title: "Name",
     dataIndex: "name",
@@ -18,7 +20,8 @@ export const columns = [
         value: "John",
       },
     ],
-    onFilter: (value, record) => record.name.indexOf(value) === 0,
+    onFilter: (value: any, record: any): boolean =>
+      record.name.indexOf(value) === 0,
   },
   {
     title: "Other",
@@ -28,7 +31,7 @@ export const columns = [
         dataIndex: "age",
         key: "age",
         width: 150,
-        sorter: (a, b) => a.age - b.age,
+        sorter: (a: any, b: any): number => a.age - b.age,
       },
       {
         title: "Address",
@@ -85,7 +88,19 @@ export const columns = [
   },
 ];
 
-export const dataSource: any[] = [];
+export interface Item {
+  key: number;
+  name: string;
+  age: number;
+  street: string;
+  building: string;
+  number: number;
+  companyAddress: string;
+  companyName: string;
+  gender: string;
+}
+
+export const dataSource: Item[] = [];
 for (let i = 0; i < 100; i++) {
   dataSource.push({
     key: i,

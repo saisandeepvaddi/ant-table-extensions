@@ -1,66 +1,62 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Input } from "antd";
 import debounceFn from "lodash/debounce";
 import Fuse from "fuse.js";
-import { InputProps } from "antd/lib/input";
-import { ColumnsType } from "antd/lib/table";
+import {
+  CustomDataSourceType,
+  DataSource,
+  SearchFunction,
+  SearchTableInputProps,
+} from "./types";
+import { ColumnGroupType, ColumnType, ColumnsType } from "antd/es/table";
 
-export interface ISearchTableInputProps {
-  /** Custom function to search if you want to use your own search.
-   *  Takes dataSource and searchTerm and should return filtered dataSource.
-   */
-  searchFunction?: (dataSource: any[], searchTerm: string) => any[];
-
-  /** Ant table's dataSource. */
-  dataSource?: any[];
-
-  /** Ant table's columns */
-  columns?: ColumnsType<any>;
-
-  /** `setState` style function which updates dataSource. */
-  setDataSource?: (dataSource: any[]) => void;
-  /** Debounces search  */
-  debounce?: boolean;
-  /** Any of Ant Input component's props as object. */
-  inputProps?: InputProps;
-  /** Allow fuzzy search or search for exact search term. */
-  fuzzySearch?: boolean;
-  /** Uses Fuse.js for search. Pass any of fuse.js options here as object. */
-  fuseProps?: Fuse.IFuseOptions<any>;
-}
-
-const getGroupedColumnKeysFromChildren = (column: any, keys = []) => {
+const getGroupedColumnKeysFromChildren = <T,>(
+  column: ColumnGroupType<T>,
+  keys: Array<Fuse.FuseOptionKey<T>> = []
+): Array<Fuse.FuseOptionKey<T>> => {
+  let newKeys: Array<Fuse.FuseOptionKey<T>> = [];
   for (const child of column.children) {
-    if (child.children && Array.isArray(child.children)) {
+    const childColumn = child as ColumnGroupType<T>;
+    if (childColumn.children && Array.isArray(childColumn.children)) {
       // If child has children, recurse
-      keys = getGroupedColumnKeysFromChildren(child, keys);
+      newKeys = getGroupedColumnKeysFromChildren(childColumn, keys);
     } else {
-      if (!child.dataIndex) {
+      const childColumn = child as ColumnType<T>;
+
+      if (!childColumn.dataIndex) {
         continue;
       }
 
-      if (Array.isArray(child.dataIndex)) {
-        keys = [...keys, child.dataIndex.join(".")];
+      if (Array.isArray(childColumn.dataIndex)) {
+        newKeys = [...keys, childColumn.dataIndex.join(".")];
         continue;
       }
 
-      keys = [...keys, child.dataIndex];
+      newKeys = [...keys, childColumn.dataIndex as Fuse.FuseOptionKey<T>];
     }
   }
 
-  return keys;
+  return newKeys;
 };
 
-const createDefaultFuseKeys = (dataSource: any[], columns: any[]) => {
+const createDefaultFuseKeys = <T,>(
+  dataSource: CustomDataSourceType<T>,
+  columns: ColumnsType<T>
+): Array<Fuse.FuseOptionKey<T>> => {
   const firstRecord = dataSource?.[0];
-  const keys = columns
-    .map(column => {
-      const { dataIndex, children } = column;
+  const keys = (columns ?? [])
+    .map((column) => {
+      const { children } = column as ColumnGroupType<T>;
       // check if grouped column
       if (children && Array.isArray(children)) {
-        const keys = getGroupedColumnKeysFromChildren(column, []);
+        const keys = getGroupedColumnKeysFromChildren(
+          column as ColumnGroupType<T>,
+          []
+        );
         return keys?.flat();
       }
+
+      const { dataIndex } = column as ColumnType<T>;
       // ant table allows nested objects with array of strings as dataIndex
       if (Array.isArray(dataIndex)) {
         return dataIndex.join(".");
@@ -70,9 +66,9 @@ const createDefaultFuseKeys = (dataSource: any[], columns: any[]) => {
       // Even though it's something you shouldn't do based on ant table's API, since users will see fuse.js `value.trim is not a function error` I'm throwing error.
       if (
         firstRecord &&
-        Object.prototype.toString.call(firstRecord[dataIndex]) ===
+        Object.prototype.toString.call(firstRecord[dataIndex as keyof T]) ===
           "[object Object]" &&
-        typeof dataIndex === "string"
+        ["string", "number"].includes(typeof dataIndex)
       ) {
         throw new Error(
           `'${dataIndex}' is an object in dataSource. But dataIndex is given as string. If it is an object, use array of strings as dataIndex.`
@@ -80,30 +76,30 @@ const createDefaultFuseKeys = (dataSource: any[], columns: any[]) => {
       }
       return dataIndex;
     })
-    .filter(dataIndex => !!dataIndex)
+    .filter((dataIndex) => !!dataIndex)
     .flat(10)
-    .filter(dataIndex => typeof dataIndex === "string"); // after flattening max depth 10, if there are still arrays, ignore
+    .filter((dataIndex) => ["string", "number"].includes(typeof dataIndex)); // after flattening max depth 10, if there are still arrays, ignore
 
-  return keys;
+  return keys as Array<Fuse.FuseOptionKey<T>>;
 };
 
-export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
-  searchFunction = null,
-  dataSource,
+export function SearchTableInput<T extends object = DataSource>({
+  searchFunction = undefined,
+  dataSource = [],
   setDataSource,
   debounce = true,
   inputProps = {
     placeholder: "Search...",
   },
   fuzzySearch = false,
-  columns,
+  columns = [],
   fuseProps,
-}) => {
+}: SearchTableInputProps<T>) {
   const [query, setQuery] = useState<string>("");
-  const allData = useRef<any[] | null>();
-  const fuse = useRef<Fuse<any> | null>();
+  const allData = useRef<T[]>([]);
+  const fuse = useRef<Fuse<T> | null>();
 
-  const _fuseProps = React.useMemo(() => {
+  const _fuseProps: Fuse.IFuseOptions<T> = React.useMemo(() => {
     return {
       keys: createDefaultFuseKeys(dataSource, columns),
       threshold: fuzzySearch ? 0.6 : 0,
@@ -111,20 +107,31 @@ export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
     };
   }, [fuseProps, dataSource, columns, fuzzySearch]);
 
-  const searchTable = (_dataSource: any[], searchTerm = "") => {
-    if (searchTerm === "" || !fuse || !fuse.current) {
-      return allData.current;
-    }
+  const searchTable = useCallback(
+    (
+      _dataSource: CustomDataSourceType<T>,
+      searchTerm = ""
+    ): CustomDataSourceType<T> => {
+      if (searchTerm === "" || !fuse || !fuse.current) {
+        return allData.current ?? [];
+      }
 
-    const newResults = fuse.current.search(searchTerm).map(res => res.item);
-    return newResults;
-  };
+      const newResults = fuse.current.search(searchTerm).map((res) => res.item);
+      return newResults;
+    },
+    []
+  );
 
-  const searchTableDebounced = React.useCallback(
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const searchTableDebounced = useCallback(
     debounceFn(
-      (dataSource: any, searchTerm: string, searchFn: any) => {
+      (
+        dataSource: CustomDataSourceType<T>,
+        searchTerm: string,
+        searchFn: SearchFunction<T>
+      ) => {
         const results = searchFn?.(dataSource, searchTerm);
-        setDataSource(results);
+        setDataSource?.(results);
       },
       100,
       {
@@ -135,18 +142,28 @@ export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
     []
   );
 
-  const handleInputChange = (e: { target: { value: any } }) => {
-    const value = e.target.value;
-    setQuery(value);
+  const handleInputChange = useCallback(
+    (e: { target: { value: string } }): void => {
+      const value = e.target.value;
+      setQuery(value);
 
-    if (debounce) {
-      searchTableDebounced(dataSource, value, searchFunction ?? searchTable);
-    } else {
-      const results =
-        searchFunction?.(dataSource, value) ?? searchTable(dataSource, value);
-      setDataSource(results);
-    }
-  };
+      if (debounce) {
+        searchTableDebounced(dataSource, value, searchFunction ?? searchTable);
+      } else {
+        const results =
+          searchFunction?.(dataSource, value) ?? searchTable(dataSource, value);
+        setDataSource?.(results);
+      }
+    },
+    [
+      dataSource,
+      debounce,
+      searchFunction,
+      searchTable,
+      searchTableDebounced,
+      setDataSource,
+    ]
+  );
 
   useEffect(() => {
     if (!dataSource) {
@@ -169,7 +186,7 @@ export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
     } else {
       const results =
         searchFunction?.(dataSource, query) ?? searchTable(dataSource, query);
-      setDataSource(results);
+      setDataSource?.(results);
     }
   }, [
     query,
@@ -178,6 +195,7 @@ export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
     searchFunction,
     setDataSource,
     debounce,
+    searchTable,
   ]);
 
   return (
@@ -189,6 +207,6 @@ export const SearchTableInput: React.FC<ISearchTableInputProps> = ({
       {...inputProps}
     />
   );
-};
+}
 
 export default SearchTableInput;

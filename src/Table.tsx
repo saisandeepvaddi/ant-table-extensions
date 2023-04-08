@@ -1,31 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Table as AntTable } from "antd";
-import { TableProps } from "antd/lib/table";
-import ExportTableButton, {
-  IExportFieldButtonProps,
-} from "./ExportTableButton";
-import SearchTableInput, { ISearchTableInputProps } from "./SearchTableInput";
-import { useMountedState } from "./hooks/isMounted";
+import ExportTableButton from "./ExportTableButton";
+import SearchTableInput from "./SearchTableInput";
 
-export * from "./ExportTableButton";
-export * from "./SearchTableInput";
+import { TableProps, DataSource } from "./types";
+// import { useIsMounted } from "./hooks/useIsMounted";
 
-export type IExportableTableProps = TableProps<any> & IExportFieldButtonProps;
-
-export type ITableUtils = {
-  /** Exportable Table */
-  exportable?: boolean;
-  /** Props object to customize export button */
-  exportableProps?: IExportFieldButtonProps;
-  /** Searchable Table */
-  searchable?: boolean;
-  /** Props object to customize export button */
-  searchableProps?: ISearchTableInputProps;
-};
-
-export type ITableProps<T> = TableProps<T> & ITableUtils;
-
-export const Table: React.FC<ITableProps<any>> = ({
+export function Table<T extends object = DataSource>({
   exportable = false,
   exportableProps,
   searchable = false,
@@ -33,17 +14,25 @@ export const Table: React.FC<ITableProps<any>> = ({
   dataSource,
   columns,
   ...otherProps
-}) => {
-  const isMounted = useMountedState();
-  const isExportable = exportable || exportableProps;
-  const isSearchable = searchable || searchableProps;
-  const [searchDataSource, setSearchDataSource] = useState<any>(dataSource);
+}: TableProps<T>) {
+  const isExportable = useMemo(
+    () => exportable || !!exportableProps,
+    [exportable, exportableProps]
+  );
+
+  const isSearchable = useMemo(
+    () => searchable || searchableProps,
+    [searchable, searchableProps]
+  );
+  const [searchDataSource, setSearchDataSource] = useState<
+    readonly T[] | undefined
+  >(dataSource);
 
   useEffect(() => {
-    if (isSearchable && isMounted()) {
+    if (isSearchable) {
       setSearchDataSource(dataSource);
     }
-  }, [isSearchable, dataSource, isMounted]);
+  }, [dataSource, isSearchable]);
 
   return (
     <div>
@@ -84,4 +73,4 @@ export const Table: React.FC<ITableProps<any>> = ({
       />
     </div>
   );
-};
+}

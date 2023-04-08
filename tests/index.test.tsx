@@ -1,14 +1,20 @@
 import React from "react";
 import { columns, dataSource } from "../fixtures/table";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
 import { Table } from "../src";
 
 // tests using ant not working without it.
 Object.defineProperty(window, "matchMedia", {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
+  value: jest.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -22,6 +28,7 @@ Object.defineProperty(window, "matchMedia", {
 
 if (typeof window.URL.createObjectURL === "undefined") {
   Object.defineProperty(window.URL, "createObjectURL", {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     value: jest.fn(() => {}),
   });
 }
@@ -105,25 +112,37 @@ test("Searches in modified dataSource", async () => {
   expect(screen.getByText(dataSource[1].lastName)).toBeInTheDocument();
   const searchBox = screen.getByPlaceholderText(/search/i);
   expect(searchBox).toBeInTheDocument();
-  userEvent.type(searchBox, dataSource[1].lastName);
+  act(() => {
+    userEvent.type(searchBox, dataSource[1].lastName);
+  });
   await waitFor(() =>
     expect(screen.queryByText(dataSource[0].lastName)).not.toBeInTheDocument()
   );
   expect(screen.getByText(dataSource[1].lastName)).toBeInTheDocument();
 
   const newDataSource = dataSource.slice(2, 5);
-  rerender(<Table dataSource={newDataSource} columns={columns} searchable />);
+  act(() => {
+    rerender(<Table dataSource={newDataSource} columns={columns} searchable />);
+  });
   expect(screen.queryByText(/no data/i)).not.toBeInTheDocument();
-
-  expect(screen.queryByText(dataSource[0].lastName)).not.toBeInTheDocument();
-  expect(screen.queryByText(dataSource[1].lastName)).not.toBeInTheDocument();
-
-  expect(screen.getByText(dataSource[2].lastName)).toBeInTheDocument();
+  // await wait(2000);
+  await waitFor(() =>
+    expect(screen.queryByText(dataSource[0].lastName)).not.toBeInTheDocument()
+  );
+  await waitFor(() =>
+    expect(screen.queryByText(dataSource[1].lastName)).not.toBeInTheDocument()
+  );
+  await waitFor(() =>
+    expect(screen.getByText(dataSource[2].lastName)).toBeInTheDocument()
+  );
   const newSearchBox = screen.getByPlaceholderText(/search/i);
-  expect(newSearchBox).toBeInTheDocument();
 
-  userEvent.clear(newSearchBox);
-  userEvent.type(newSearchBox, newDataSource[1].lastName);
+  await waitFor(() => expect(newSearchBox).toBeInTheDocument());
+
+  act(() => {
+    userEvent.clear(newSearchBox);
+    userEvent.type(newSearchBox, newDataSource[1].lastName);
+  });
 
   await waitFor(() =>
     expect(
@@ -281,9 +300,11 @@ test("Searches tables with grouped headers", async () => {
 
   render(<Table dataSource={_dataSource} columns={_columns} searchable />);
   expect(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     screen.getByText((_dataSource[0] as any).companyName)
   ).toBeInTheDocument();
   expect(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     screen.getByText((_dataSource[0] as any).companyAddress)
   ).toBeInTheDocument();
 
