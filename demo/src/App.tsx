@@ -1,6 +1,6 @@
 import "./App.css";
 import { Table as TableNew } from "ant-table-extensions";
-import { dataSource, columns, Item } from "../fixtures/groupedColumns";
+import { dataSource, columns } from "../fixtures/groupedColumns";
 import { useState } from "react";
 import { Radio, Table } from "antd";
 
@@ -24,7 +24,7 @@ function App(): JSX.Element {
       {tableType === "ant" ? (
         <Table dataSource={dataSource} columns={columns} />
       ) : (
-        <TableNew<Item>
+        <TableNew
           dataSource={dataSource}
           columns={columns}
           searchable
