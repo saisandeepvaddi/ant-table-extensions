@@ -29,6 +29,7 @@
     "start": "vite --watch",
     "build": "vite build",
     "test": "cross-env DEBUG_PRINT_LIMIT=50 && jest test --passWithNoTests",
+    "test:watch": "cross-env DEBUG_PRINT_LIMIT=50 && jest test --watch --passWithNoTests",
     "lint": "./node_modules/.bin/eslint src stories",
     "storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider start-storybook -p 6006",
     "build-storybook": "build-storybook",

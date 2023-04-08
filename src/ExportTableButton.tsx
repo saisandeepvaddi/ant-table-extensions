@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useMemo } from "react";
 import { Button, Modal, Checkbox } from "antd";
 import { unparse } from "papaparse";
 import get from "lodash/get";
@@ -73,7 +73,10 @@ export const ExportTableButton: React.FC<ExportFieldButtonProps> = (props) => {
 
   const [showModal, setShowModal] = React.useState(false);
 
-  const fieldsOrColumns = fields ?? getFieldsFromColumns(columns);
+  const fieldsOrColumns = useMemo(
+    () => fields ?? getFieldsFromColumns(columns),
+    [columns, fields]
+  );
 
   const [selectedFields, setSelectedFields] = React.useState(() => {
     if (fields) {
@@ -102,6 +105,7 @@ export const ExportTableButton: React.FC<ExportFieldButtonProps> = (props) => {
       (name) => selectedFields.indexOf(name) > -1
     );
 
+    console.log("fieldsOrColumns:", fieldsOrColumns);
     const data = cleanupDataSource(
       dataSource,
       fieldsOrColumns,

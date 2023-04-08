@@ -3,7 +3,7 @@
 import { ColumnsType } from "antd/es/table";
 
 // To fix https://github.com/saisandeepvaddi/ant-table-extensions/issues/73
-export const columns: ColumnsType<any> = [
+export const columns: ColumnsType<Item> = [
   {
     title: "Name",
     dataIndex: "name",
