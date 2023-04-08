@@ -34,6 +34,8 @@ yarn add ant-table-extensions
 
 This library doesn't import any styles. Please make sure you have `ant` styles already imported.
 
+> For Ant v5 support, try installing 1.1.8-alpha1 version
+
 ## Get Started
 
 Please check [Get Started](https://ant-table-extensions.vercel.app/?path=/docs/get-started--page) section for usage docs.
