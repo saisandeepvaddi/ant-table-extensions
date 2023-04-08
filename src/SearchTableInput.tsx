@@ -123,7 +123,7 @@ export function SearchTableInput<T extends object = DataSource>({
   );
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const searchTableDebounced = React.useCallback(
+  const searchTableDebounced = useCallback(
     debounceFn(
       (
         dataSource: CustomDataSourceType<T>,
@@ -142,18 +142,28 @@ export function SearchTableInput<T extends object = DataSource>({
     []
   );
 
-  const handleInputChange = (e: { target: { value: string } }): void => {
-    const value = e.target.value;
-    setQuery(value);
+  const handleInputChange = useCallback(
+    (e: { target: { value: string } }): void => {
+      const value = e.target.value;
+      setQuery(value);
 
-    if (debounce) {
-      searchTableDebounced(dataSource, value, searchFunction ?? searchTable);
-    } else {
-      const results =
-        searchFunction?.(dataSource, value) ?? searchTable(dataSource, value);
-      setDataSource?.(results);
-    }
-  };
+      if (debounce) {
+        searchTableDebounced(dataSource, value, searchFunction ?? searchTable);
+      } else {
+        const results =
+          searchFunction?.(dataSource, value) ?? searchTable(dataSource, value);
+        setDataSource?.(results);
+      }
+    },
+    [
+      dataSource,
+      debounce,
+      searchFunction,
+      searchTable,
+      searchTableDebounced,
+      setDataSource,
+    ]
+  );
 
   useEffect(() => {
     if (!dataSource) {
