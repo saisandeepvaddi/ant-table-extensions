@@ -1,4 +1,4 @@
-import { ButtonProps, InputProps } from "antd";
+import { ButtonProps, InputProps, ModalProps } from "antd";
 import { ColumnGroupType, ColumnType } from "antd/es/table";
 import { TableProps as AntTableProps } from "antd/lib/table";
 import { ReactNode } from "react";
@@ -6,7 +6,7 @@ import Fuse from "fuse.js";
 
 export type DataSource = any;
 
-type CustomDataSourceType<T> = TableProps<T>["dataSource"];
+export type CustomDataSourceType<T> = TableProps<T>["dataSource"];
 
 export interface ExportFieldButtonProps<T = DataSource> {
   /** Ant table's dataSource */
@@ -21,6 +21,7 @@ export interface ExportFieldButtonProps<T = DataSource> {
   disabled?: boolean;
   /** Any of Ant Button component props as object. */
   btnProps?: ButtonProps;
+  modalProps?: ModalProps;
   /** Can be used to change text in button. */
   children?: ReactNode;
   /** Shows a modal to pick which columns to include exported file. */
@@ -60,14 +61,16 @@ export type ColumnWithDataIndex<T = DataSource> = (
   dataIndex?: string | string[];
 };
 
+export type SearchFunction<T> = (
+  dataSource: CustomDataSourceType<T>,
+  searchTerm: string
+) => CustomDataSourceType<T>;
+
 export interface SearchTableInputProps<T = DataSource> {
   /** Custom function to search if you want to use your own search.
    *  Takes dataSource and searchTerm and should return filtered dataSource.
    */
-  searchFunction?: (
-    dataSource: CustomDataSourceType<T>,
-    searchTerm: string
-  ) => CustomDataSourceType<T>;
+  searchFunction?: SearchFunction<T>;
 
   /** Ant table's dataSource. */
   dataSource?: CustomDataSourceType<T>;

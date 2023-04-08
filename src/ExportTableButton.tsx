@@ -6,12 +6,13 @@ import set from "lodash/set";
 import { ColumnsType } from "antd/lib/table";
 import type {
   ColumnWithDataIndex,
+  CustomDataSourceType,
   ExportFieldButtonProps,
   TableExportFields,
 } from "./types";
 
-const getFieldsFromColumns = (
-  columns: ColumnsType<any>
+const getFieldsFromColumns = <T,>(
+  columns: ColumnsType<T>
 ): TableExportFields => {
   const fields = {};
   (columns as ColumnWithDataIndex[])?.forEach((column: ColumnWithDataIndex) => {
@@ -26,13 +27,17 @@ const getFieldsFromColumns = (
   return fields;
 };
 
-const cleanupDataSource = (dataSource: any, exportFieldNames: TableExportFields, selectedFields: string[]): any => {
+const cleanupDataSource = <T,>(
+  dataSource: CustomDataSourceType<T>,
+  exportFieldNames: TableExportFields,
+  selectedFields: string[]
+): any => {
   if (!dataSource || dataSource.length === 0) {
     return { data: [], fields: [] };
   }
 
   const newData = [...dataSource];
-  const fields = selectedFields.map(fieldName => {
+  const fields = selectedFields.map((fieldName) => {
     const fieldValue = get(exportFieldNames, fieldName);
     if (typeof fieldValue === "string") {
       return fieldValue;
@@ -41,7 +46,7 @@ const cleanupDataSource = (dataSource: any, exportFieldNames: TableExportFields,
   });
 
   const data = newData.map((record, rowIndex) => {
-    return selectedFields.map(fieldName => {
+    return selectedFields.map((fieldName) => {
       const fieldValue = get(exportFieldNames, fieldName);
       const recordValue: any = get(record, fieldName);
       if (typeof fieldValue === "string") {
@@ -54,13 +59,14 @@ const cleanupDataSource = (dataSource: any, exportFieldNames: TableExportFields,
   return [fields, ...data];
 };
 
-export const ExportTableButton: React.FC<ExportFieldButtonProps> = props => {
+export const ExportTableButton: React.FC<ExportFieldButtonProps> = (props) => {
   const {
     dataSource = [],
     fileName,
     fields,
     disabled,
     btnProps,
+    modalProps,
     columns = [],
     showColumnPicker = false,
   } = props;
@@ -93,7 +99,7 @@ export const ExportTableButton: React.FC<ExportFieldButtonProps> = props => {
     }
 
     const selectedFieldsInOriginalOrder = Object.keys(fieldsOrColumns).filter(
-      name => selectedFields.indexOf(name) > -1
+      (name) => selectedFields.indexOf(name) > -1
     );
 
     const data = cleanupDataSource(
@@ -103,7 +109,7 @@ export const ExportTableButton: React.FC<ExportFieldButtonProps> = props => {
     );
 
     const csv = unparse(data, {
-      skipEmptyLines: 'greedy',
+      skipEmptyLines: "greedy",
       header: false,
     });
     const blob = new Blob([csv]);
@@ -123,7 +129,7 @@ export const ExportTableButton: React.FC<ExportFieldButtonProps> = props => {
       if (checked) {
         newSelectedFields = Array.from(new Set([...newSelectedFields, key]));
       } else {
-        newSelectedFields = newSelectedFields.filter(field => field !== key)
+        newSelectedFields = newSelectedFields.filter((field) => field !== key);
       }
 
       setSelectedFields(newSelectedFields);
@@ -157,6 +163,7 @@ export const ExportTableButton: React.FC<ExportFieldButtonProps> = props => {
           }}
           okText={"Export"}
           title={"Select columns to export"}
+          {...modalProps}
         >
           <div className="d-flex flex-column align-start">
             {Object.entries(fieldsOrColumns).map(([key, value]) => {
@@ -166,7 +173,9 @@ export const ExportTableButton: React.FC<ExportFieldButtonProps> = props => {
                   style={{ padding: 0, margin: 0 }}
                   defaultChecked={true}
                   checked={selectedFields.indexOf(key) > -1}
-                  onChange={(e): void => handleCheckboxChange(key, e.target.checked)}
+                  onChange={(e): void =>
+                    handleCheckboxChange(key, e.target.checked)
+                  }
                 >
                   {typeof value === "string" ? value : value?.header ?? ""}
                 </Checkbox>

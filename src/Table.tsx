@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Table as AntTable } from "antd";
 import ExportTableButton from "./ExportTableButton";
 import SearchTableInput from "./SearchTableInput";
 
 import { TableProps, DataSource } from "./types";
-import { useIsMounted } from "./hooks/useIsMounted";
+// import { useIsMounted } from "./hooks/useIsMounted";
 
 export function Table<T extends object = DataSource>({
   exportable = false,
@@ -27,13 +27,12 @@ export function Table<T extends object = DataSource>({
   const [searchDataSource, setSearchDataSource] = useState<
     readonly T[] | undefined
   >(dataSource);
-  const isMounted = useIsMounted();
 
   useEffect(() => {
-    if (isSearchable && isMounted()) {
+    if (isSearchable) {
       setSearchDataSource(dataSource);
     }
-  }, [isSearchable, dataSource, isMounted]);
+  }, [dataSource, isSearchable]);
 
   return (
     <div>

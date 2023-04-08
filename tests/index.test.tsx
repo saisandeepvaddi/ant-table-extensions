@@ -14,7 +14,7 @@ import { Table } from "../src";
 // tests using ant not working without it.
 Object.defineProperty(window, "matchMedia", {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
+  value: jest.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -28,6 +28,7 @@ Object.defineProperty(window, "matchMedia", {
 
 if (typeof window.URL.createObjectURL === "undefined") {
   Object.defineProperty(window.URL, "createObjectURL", {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     value: jest.fn(() => {}),
   });
 }
@@ -299,9 +300,11 @@ test("Searches tables with grouped headers", async () => {
 
   render(<Table dataSource={_dataSource} columns={_columns} searchable />);
   expect(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     screen.getByText((_dataSource[0] as any).companyName)
   ).toBeInTheDocument();
   expect(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     screen.getByText((_dataSource[0] as any).companyAddress)
   ).toBeInTheDocument();
 
