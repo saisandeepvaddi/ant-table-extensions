@@ -8,11 +8,15 @@ export type DataSource = any;
 
 export type CustomDataSourceType<T> = TableProps<T>["dataSource"];
 
-export type ExportColumnValue<T> = (record: T) => string | number;
+export type ExportColumnValue<T> = (
+  fieldValue: any,
+  record: T,
+  index: number
+) => string | number;
 
 export interface ObjectColumnExporter<T> {
-  title: string;
-  getValue: ExportColumnValue<T>;
+  header: string;
+  formatter: ExportColumnValue<T>;
 }
 
 export type ColumnExporter<T> = ExportColumnValue<T> | ObjectColumnExporter<T>;
@@ -59,13 +63,8 @@ export interface TableProps<T> extends AntTableProps<T> {
   searchableProps?: SearchTableInputProps;
 }
 
-export interface TableExportFields {
-  [dataIndex: string]:
-    | string
-    | {
-        header: string;
-        formatter?: (fieldValue: any, record: any, index: number) => string;
-      };
+export interface TableExportFields<T = DataSource> {
+  [dataIndex: string]: string | ObjectColumnExporter<T>;
 }
 
 /**@deprecated Removed `I` prefix for interfaces. Use TableExportFields. */

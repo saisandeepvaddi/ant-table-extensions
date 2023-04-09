@@ -7,8 +7,8 @@ import {
   DataSource,
   SearchFunction,
   SearchTableInputProps,
-} from "./types";
-import { ColumnGroupType, ColumnType, ColumnsType } from "./types";
+} from "../types";
+import { ColumnGroupType, ColumnType, ColumnsType } from "../types";
 
 const getGroupedColumnKeysFromChildren = <T,>(
   column: ColumnGroupType<T>,

@@ -3,26 +3,43 @@ import { Button, Modal, Checkbox } from "antd";
 import { unparse } from "papaparse";
 import get from "lodash/get";
 import set from "lodash/set";
-import { ColumnsType } from "./types";
+import { ColumnGroupType, ColumnType, ColumnsType } from "../types";
 import type {
-  ColumnWithDataIndex,
   CustomDataSourceType,
   ExportFieldButtonProps,
   TableExportFields,
-} from "./types";
+} from "../types";
 
 const getFieldsFromColumns = <T,>(
-  columns: ColumnsType<T>
+  columns: ColumnsType<T>,
+  fields: TableExportFields = {}
 ): TableExportFields => {
-  const fields = {};
-  (columns as ColumnWithDataIndex[])?.forEach((column: ColumnWithDataIndex) => {
-    const { title, key, dataIndex } = column;
+  for (const column of columns) {
+    const { children } = column as ColumnGroupType<T>;
+
+    if (children) {
+      fields = getFieldsFromColumns(children, fields);
+    }
+
+    const { title, key, dataIndex, exporter } = column as ColumnType<T>;
     const fieldName =
       (Array.isArray(dataIndex) ? dataIndex.join(".") : dataIndex) ?? key;
-    if (fieldName) {
-      set(fields, fieldName, title);
+
+    if (!fieldName) {
+      continue;
     }
-  });
+
+    if (exporter) {
+      const _exporter = {
+        title: typeof title === "string" ? title : dataIndex ?? "No Title",
+        ...exporter,
+      };
+      set(fields, fieldName, _exporter);
+      continue;
+    }
+
+    set(fields, fieldName, title);
+  }
 
   return fields;
 };

@@ -1,6 +1,6 @@
 // Taken directly from ant docs
 
-import { ColumnsType } from "antd/es/table";
+import type { ColumnsType } from "ant-table-extensions";
 
 // To fix https://github.com/saisandeepvaddi/ant-table-extensions/issues/73
 export const columns: ColumnsType<Item> = [
@@ -10,6 +10,12 @@ export const columns: ColumnsType<Item> = [
     key: "name",
     width: 100,
     fixed: "left",
+    exporter: {
+      header: "Name",
+      formatter: (fieldValue: any, record: any, index: number): string => {
+        return fieldValue;
+      },
+    },
     filters: [
       {
         text: "Joe",
@@ -31,6 +37,12 @@ export const columns: ColumnsType<Item> = [
         dataIndex: "age",
         key: "age",
         width: 150,
+        exporter: {
+          header: "Age",
+          formatter: (fieldValue: any, record: any, index: number): string => {
+            return fieldValue + " years";
+          },
+        },
         sorter: (a: any, b: any): number => a.age - b.age,
       },
       {
@@ -79,13 +91,6 @@ export const columns: ColumnsType<Item> = [
       },
     ],
   },
-  {
-    title: "Gender",
-    dataIndex: "gender",
-    key: "gender",
-    width: 80,
-    fixed: "right",
-  },
 ];
 
 export interface Item {
@@ -97,7 +102,6 @@ export interface Item {
   number: number;
   companyAddress: string;
   companyName: string;
-  gender: string;
 }
 
 export const dataSource: Item[] = [];
@@ -111,6 +115,5 @@ for (let i = 0; i < 100; i++) {
     number: 2035 + (i + 10),
     companyAddress: "Lake Street 42",
     companyName: "SoftLake Co",
-    gender: "M",
   });
 }

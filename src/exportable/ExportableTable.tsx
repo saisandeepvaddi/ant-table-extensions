@@ -1,7 +1,7 @@
 import React from "react";
 import { Table as AntTable } from "antd";
 import ExportTableButton from "./ExportTableButton";
-import { DataSource, TableProps } from "./types";
+import { DataSource, TableProps } from "../types";
 
 export const ExportableTable: React.FC<TableProps<DataSource>> = (props) => {
   const { dataSource, columns, exportableProps } = props;

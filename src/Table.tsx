@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { Table as AntTable } from "antd";
-import ExportTableButton from "./ExportTableButton";
-import SearchTableInput from "./SearchTableInput";
+import ExportTableButton from "./exportable/ExportTableButton";
+import SearchTableInput from "./searchable/SearchTableInput";
 
 import { TableProps, DataSource } from "./types";
 // import { useIsMounted } from "./hooks/useIsMounted";
