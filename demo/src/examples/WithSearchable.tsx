@@ -6,6 +6,7 @@ function WithSearchable(): JSX.Element {
     <TableNew
       dataSource={dataSource}
       columns={columns}
+      size="small"
       searchable
       // searchableProps={{
       //   searchFunction(dataSource, searchTerm) {
@@ -25,10 +26,6 @@ function WithSearchable(): JSX.Element {
       //     });
       //   },
       // }}
-      exportable
-      exportableProps={{
-        showColumnPicker: true,
-      }}
     />
   );
 }

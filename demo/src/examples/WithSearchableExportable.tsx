@@ -1,12 +1,13 @@
 import { Table as TableNew } from "ant-table-extensions";
 import { dataSource, columns } from "../../fixtures/groupedColumns";
 
-function WithExportable(): JSX.Element {
+function WithSearchableExportable(): JSX.Element {
   return (
     <TableNew
       dataSource={dataSource}
       columns={columns}
       size="small"
+      searchable
       // searchableProps={{
       //   searchFunction(dataSource, searchTerm) {
       //     return (dataSource ?? []).filter((row) => {
@@ -33,4 +34,4 @@ function WithExportable(): JSX.Element {
   );
 }
 
-export default WithExportable;
+export default WithSearchableExportable;

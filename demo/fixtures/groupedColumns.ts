@@ -113,7 +113,7 @@ for (let i = 0; i < 100; i++) {
     street: "Lake Park " + i,
     building: "C",
     number: 2035 + (i + 10),
-    companyAddress: "Lake Street 42",
-    companyName: "SoftLake Co",
+    companyAddress: "Lake Street " + (i + 100),
+    companyName: "SoftLake Co " + i * 2,
   });
 }
