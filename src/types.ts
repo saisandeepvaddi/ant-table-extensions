@@ -48,8 +48,10 @@ export interface ExportFieldButtonProps<T = DataSource> {
   modalProps?: ModalProps;
   /** Can be used to change text in button. */
   children?: ReactNode;
-  /** Shows a modal to pick which columns to include exported file. */
+  /** Shows a modal to pick which columns to include exported file. Default: false */
   showColumnPicker?: boolean;
+  /** If true, all columns will be selected to export by default. Default: true */
+  autoPickAllColumns?: boolean;
 }
 
 export interface TableProps<T> extends AntTableProps<T> {

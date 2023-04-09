@@ -12,13 +12,15 @@ import type {
 
 const getFieldsFromColumns = <T,>(
   columns: ColumnsType<T>,
+  props: ExportFieldButtonProps = {},
   fields: TableExportFields = {}
 ): TableExportFields => {
+  const { autoPickAllColumns } = props;
   for (const column of columns) {
     const { children } = column as ColumnGroupType<T>;
 
     if (children) {
-      fields = getFieldsFromColumns(children, fields);
+      fields = getFieldsFromColumns(children, props, fields);
     }
 
     const { title, key, dataIndex, exporter } = column as ColumnType<T>;
@@ -38,7 +40,9 @@ const getFieldsFromColumns = <T,>(
       continue;
     }
 
-    set(fields, fieldName, title);
+    if (autoPickAllColumns) {
+      set(fields, fieldName, title);
+    }
   }
 
   return fields;
@@ -91,8 +95,10 @@ export const ExportTableButton: React.FC<ExportFieldButtonProps> = (props) => {
   const [showModal, setShowModal] = React.useState(false);
 
   const fieldsOrColumns = useMemo(
-    () => fields ?? getFieldsFromColumns(columns),
-    [columns, fields]
+    () =>
+      fields ??
+      getFieldsFromColumns(columns, { ...props, autoPickAllColumns: true }),
+    [columns, fields, props]
   );
 
   const [selectedFields, setSelectedFields] = React.useState(() => {
