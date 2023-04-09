@@ -3,7 +3,7 @@ import { Button, Modal, Checkbox } from "antd";
 import { unparse } from "papaparse";
 import get from "lodash/get";
 import set from "lodash/set";
-import { ColumnsType } from "antd/lib/table";
+import { ColumnsType } from "./types";
 import type {
   ColumnWithDataIndex,
   CustomDataSourceType,
@@ -105,7 +105,6 @@ export const ExportTableButton: React.FC<ExportFieldButtonProps> = (props) => {
       (name) => selectedFields.indexOf(name) > -1
     );
 
-    console.log("fieldsOrColumns:", fieldsOrColumns);
     const data = cleanupDataSource(
       dataSource,
       fieldsOrColumns,

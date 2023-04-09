@@ -1,5 +1,5 @@
 import { ButtonProps, InputProps, ModalProps } from "antd";
-import { ColumnGroupType, ColumnType } from "antd/es/table";
+import { ColumnType as AntColumnType } from "antd/lib/table";
 import { TableProps as AntTableProps } from "antd/lib/table";
 import { ReactNode } from "react";
 import Fuse from "fuse.js";
@@ -7,6 +7,26 @@ import Fuse from "fuse.js";
 export type DataSource = any;
 
 export type CustomDataSourceType<T> = TableProps<T>["dataSource"];
+
+export type ExportColumnValue<T> = (record: T) => string | number;
+
+export interface ObjectColumnExporter<T> {
+  title: string;
+  getValue: ExportColumnValue<T>;
+}
+
+export type ColumnExporter<T> = ExportColumnValue<T> | ObjectColumnExporter<T>;
+
+export type ColumnType<T> = AntColumnType<T> & {
+  exporter?: ColumnExporter<T>;
+};
+// export type ColumnsType<T> = ColumnType<T>[];
+
+export type ColumnsType<T> = (ColumnGroupType<T> | ColumnType<T>)[];
+
+export interface ColumnGroupType<T> extends Omit<ColumnType<T>, "dataIndex"> {
+  children: ColumnsType<T>;
+}
 
 export interface ExportFieldButtonProps<T = DataSource> {
   /** Ant table's dataSource */

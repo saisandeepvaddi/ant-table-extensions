@@ -8,7 +8,7 @@ import {
   SearchFunction,
   SearchTableInputProps,
 } from "./types";
-import { ColumnGroupType, ColumnType, ColumnsType } from "antd/es/table";
+import { ColumnGroupType, ColumnType, ColumnsType } from "./types";
 
 const getGroupedColumnKeysFromChildren = <T,>(
   column: ColumnGroupType<T>,

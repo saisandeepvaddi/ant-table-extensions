@@ -47,6 +47,9 @@ function App(): JSX.Element {
           //   },
           // }}
           exportable
+          exportableProps={{
+            showColumnPicker: true,
+          }}
         />
       )}
     </>
