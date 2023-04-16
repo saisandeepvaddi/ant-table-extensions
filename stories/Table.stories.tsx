@@ -65,7 +65,7 @@ export const CustomizeExportData: Story = () => {
     },
     country: {
       header: "Your Country",
-      formatter: fieldValue => {
+      formatter: (fieldValue) => {
         return "-->  " + fieldValue;
       },
     },
