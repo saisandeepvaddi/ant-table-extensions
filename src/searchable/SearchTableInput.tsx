@@ -102,7 +102,8 @@ export function SearchTableInput<T extends object = DataSource>({
   const _fuseProps: Fuse.IFuseOptions<T> = React.useMemo(() => {
     return {
       keys: createDefaultFuseKeys(dataSource, columns),
-      threshold: fuzzySearch ? 0.6 : 0,
+      threshold: fuzzySearch ? 0.6 : 0.1,
+      shouldSort: false,
       ...fuseProps,
     };
   }, [fuseProps, dataSource, columns, fuzzySearch]);
