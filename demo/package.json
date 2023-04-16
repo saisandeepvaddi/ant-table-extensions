@@ -4,11 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "start": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ladle/react": "^2.11.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
