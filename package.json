@@ -36,7 +36,8 @@
     "storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "example:start": "cd ./example && yarn start",
-    "ladle": "./node_modules/.bin/ladle serve"
+    "ladle": "./node_modules/.bin/ladle serve",
+    "ladle:build": "./node_modules/.bin/ladle build"
   },
   "jest": {
     "moduleNameMapper": {
