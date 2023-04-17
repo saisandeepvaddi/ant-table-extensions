@@ -1,4 +1,4 @@
-export default [
+export const baseData = [
   {
     key: 0,
     firstName: "Taurean",
@@ -600,3 +600,16 @@ export default [
     country: "Guinea-Bissau",
   },
 ];
+
+export default baseData.map((item, index) => {
+  return {
+    ...item,
+    address: {
+      street: `Street ${index}`,
+      city: `City ${index}`,
+      state: `State ${index}`,
+      zip: 10000 + index + 10,
+      country: item.country,
+    },
+  };
+});

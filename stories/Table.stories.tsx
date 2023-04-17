@@ -8,37 +8,36 @@ import {
 } from "../src";
 import { FileExcelOutlined, SearchOutlined } from "@ant-design/icons";
 import { columns, dataSource } from "../fixtures/table";
-
+import type { Story } from "@ladle/react";
 import "antd/dist/reset.css";
 
 export default {
-  component: Table,
   title: "Demos",
 };
 
 // // By passing optional props to this story, you can control the props of the component when
 // // you consume the story in a test.
 
-export const Default = (props: TableProps<any>) => {
+export const Default: Story = (props: TableProps<any>) => {
   // Default table. Same as Ant Table
   return <Table dataSource={dataSource} columns={columns} {...props} />;
 };
 
-export const Searchable = () => {
+export const Searchable: Story = () => {
   return <Table dataSource={dataSource} columns={columns} searchable />;
 };
 
-export const Exportable = () => {
+export const Exportable: Story = () => {
   return <Table dataSource={dataSource} columns={columns} exportable />;
 };
 
-export const SearchableAndExportable = () => {
+export const SearchableAndExportable: Story = () => {
   return (
     <Table dataSource={dataSource} columns={columns} exportable searchable />
   );
 };
 
-export const PickExportColumns = () => {
+export const PickExportColumns: Story = () => {
   return (
     <Table
       dataSource={dataSource}
@@ -49,7 +48,7 @@ export const PickExportColumns = () => {
   );
 };
 
-export const CustomizeExportData = () => {
+export const CustomizeExportData: Story = () => {
   /**
    * {
    *   [dataIndex]: header | {header: "column header name in csv", formatter: (fieldValue, record, rowIndex) => value}
@@ -89,7 +88,7 @@ export const CustomizeExportData = () => {
   );
 };
 
-export const CustomExportButton = () => {
+export const CustomExportButton: Story = () => {
   return (
     <Table
       dataSource={dataSource}
@@ -105,7 +104,7 @@ export const CustomExportButton = () => {
   );
 };
 
-export const CustomSeachInput = () => {
+export const CustomSeachInput: Story = () => {
   return (
     <Table
       dataSource={dataSource}
@@ -122,7 +121,7 @@ export const CustomSeachInput = () => {
   );
 };
 
-export const AdvancedExportButton = () => {
+export const AdvancedExportButton: Story = () => {
   /**
    * Use if you want to move around the Export button.
    * import { ExportTableButton } from "ant-table-extensions";
@@ -150,7 +149,7 @@ export const AdvancedExportButton = () => {
   );
 };
 
-export const AdvancedSearchInput = () => {
+export const AdvancedSearchInput: Story = () => {
   /*
    * Use if you want to move around the Search input button.
    * import { SearchTableInput } from "ant-table-extensions";
