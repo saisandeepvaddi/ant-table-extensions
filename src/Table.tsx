@@ -35,7 +35,7 @@ export function Table<T extends object = DataSource>({
   }, [dataSource, isSearchable]);
 
   return (
-    <div>
+    <div className="ant-table-extensions">
       <div
         style={{
           display: "flex",
