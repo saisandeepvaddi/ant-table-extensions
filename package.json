@@ -1,7 +1,7 @@
 {
   "name": "ant-table-extensions",
   "description": "Extensions to the Table component of Ant Design",
-  "version": "1.1.8-alpha1",
+  "version": "2.0.0-alpha1",
   "type": "module",
   "files": [
     "dist"
