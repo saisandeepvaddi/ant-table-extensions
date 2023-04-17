@@ -65,7 +65,7 @@ Plus, All of the [ant table props](https://ant.design/components/table/#API).
 | showColumnPicker | Show a modal to pick which columns to export.                                                | boolean    | false           |
 | children         | React Child node. But here can be used to change button text.                                | ReactChild | "Export to CSV" |
 
-Check [types.ts](./src/types.ts) for complete list until docs website is ready.
+Check [types.ts](./src/types.ts) for complete list.
 
 #### searchableProps
 
@@ -79,7 +79,7 @@ Check [types.ts](./src/types.ts) for complete list until docs website is ready.
 | fuseProps      | [Fuse.js options](https://fusejs.io/api/options.html) which is used for search by default   | object   | { keys: 'dataIndex' of columns : [], threshold: fuzzySearch ? 0.6 : 0.1 } |
 | searchFunction | Custom search function. Takes (dataSource: any[], searchTerm: string) => filteredDataSource | function | null                                                                      |
 
-Check [types.ts](./src/types.ts) for complete list until docs website is ready.
+Check [types.ts](./src/types.ts) for complete list.
 
 ## License
 
