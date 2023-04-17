@@ -23,7 +23,6 @@ npm install ant-table-extensions
 
 yarn add ant-table-extensions
 
-> For Ant v5 support, try installing 2.0.0-alpha2.0 version
 ```
 
 ```diff
