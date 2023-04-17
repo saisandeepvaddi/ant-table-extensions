@@ -7,8 +7,11 @@ export const ExportableTable: React.FC<TableProps<DataSource>> = (props) => {
   const { dataSource, columns, exportableProps } = props;
 
   return (
-    <React.Fragment>
-      <div style={{ marginBottom: 10 }}>
+    <>
+      <div
+        className="export-table-button-container"
+        style={{ marginBottom: 10 }}
+      >
         <ExportTableButton
           dataSource={dataSource}
           columns={columns}
@@ -18,6 +21,6 @@ export const ExportableTable: React.FC<TableProps<DataSource>> = (props) => {
         </ExportTableButton>
       </div>
       <AntTable {...props} />
-    </React.Fragment>
+    </>
   );
 };

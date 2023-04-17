@@ -2,8 +2,12 @@ import React, { Fragment, useEffect, useMemo } from "react";
 import { Button, Modal, Checkbox } from "antd";
 import { unparse } from "papaparse";
 import get from "lodash/get";
-import set from "lodash/set";
-import { ColumnGroupType, ColumnType, ColumnsType } from "../types";
+import {
+  ColumnGroupType,
+  ColumnType,
+  ColumnsType,
+  ObjectColumnExporter,
+} from "../types";
 import type {
   CustomDataSourceType,
   ExportFieldButtonProps,
@@ -25,23 +29,29 @@ const getFieldsFromColumns = <T,>(
 
     const { title, key, dataIndex, exporter } = column as ColumnType<T>;
     const fieldName =
-      (Array.isArray(dataIndex) ? dataIndex.join(".") : dataIndex) ?? key;
+      (Array.isArray(dataIndex) ? dataIndex.join(".") : dataIndex) ??
+      key?.toString();
 
     if (!fieldName) {
       continue;
     }
 
+    const _fieldName = fieldName as string | number;
+    const _title = typeof title === "string" ? title : _fieldName ?? "No Title";
+
     if (exporter) {
-      const _exporter = {
-        title: typeof title === "string" ? title : dataIndex ?? "No Title",
-        ...exporter,
+      const _exporter: ObjectColumnExporter<T> = {
+        header: _title,
+        formatter:
+          typeof exporter === "function" ? exporter : exporter.formatter,
       };
-      set(fields, fieldName, _exporter);
+
+      fields[_fieldName] = _exporter;
       continue;
     }
 
     if (autoPickAllColumns) {
-      set(fields, fieldName, title);
+      fields[_fieldName] = _title;
     }
   }
 
@@ -60,7 +70,7 @@ const cleanupDataSource = <T,>(
   const newData = [...dataSource];
   const fields = selectedFields.map((fieldName) => {
     const fieldValue = get(exportFieldNames, fieldName);
-    if (typeof fieldValue === "string") {
+    if (typeof fieldValue === "string" || typeof fieldValue === "number") {
       return fieldValue;
     }
     return fieldValue.header || "";
@@ -70,7 +80,7 @@ const cleanupDataSource = <T,>(
     return selectedFields.map((fieldName) => {
       const fieldValue = get(exportFieldNames, fieldName);
       const recordValue: any = get(record, fieldName);
-      if (typeof fieldValue === "string") {
+      if (typeof fieldValue === "string" || typeof fieldValue === "number") {
         return recordValue;
       }
       return fieldValue?.formatter?.(recordValue, record, rowIndex);
@@ -91,22 +101,26 @@ export const ExportTableButton: React.FC<ExportFieldButtonProps> = (props) => {
     columns = [],
     showColumnPicker = false,
     papaparseConfig = {},
+    autoPickAllColumns = true,
   } = props;
+
+  const defaultFields = useMemo(
+    () => getFieldsFromColumns(columns, { ...props, autoPickAllColumns }),
+    [autoPickAllColumns, columns, props]
+  );
 
   const [showModal, setShowModal] = React.useState(false);
 
   const fieldsOrColumns = useMemo(
-    () =>
-      fields ??
-      getFieldsFromColumns(columns, { ...props, autoPickAllColumns: true }),
-    [columns, fields, props]
+    () => fields ?? defaultFields,
+    [defaultFields, fields]
   );
 
   const [selectedFields, setSelectedFields] = React.useState(() => {
     if (fields) {
       return Object.keys(fields);
     } else if (columns) {
-      return Object.keys(getFieldsFromColumns(columns));
+      return Object.keys(defaultFields);
     }
 
     return [];
@@ -116,9 +130,9 @@ export const ExportTableButton: React.FC<ExportFieldButtonProps> = (props) => {
     if (fields) {
       setSelectedFields(Object.keys(fields));
     } else if (columns) {
-      setSelectedFields(Object.keys(getFieldsFromColumns(columns)));
+      setSelectedFields(Object.keys(defaultFields));
     }
-  }, [fields, columns]);
+  }, [fields, columns, defaultFields]);
 
   const handleDownloadCSV = React.useCallback(() => {
     if (!dataSource) {
@@ -129,12 +143,14 @@ export const ExportTableButton: React.FC<ExportFieldButtonProps> = (props) => {
       (name) => selectedFields.indexOf(name) > -1
     );
 
+    console.log("fieldsOrColumns:", fieldsOrColumns);
     const data = cleanupDataSource(
       dataSource,
       fieldsOrColumns,
       selectedFieldsInOriginalOrder
     );
 
+    console.log("data:", data);
     const csv = unparse(data, {
       skipEmptyLines: "greedy",
       header: false,
@@ -149,7 +165,7 @@ export const ExportTableButton: React.FC<ExportFieldButtonProps> = (props) => {
     document.body.removeChild(a);
 
     setShowModal(false);
-  }, [dataSource, fieldsOrColumns, selectedFields, fileName]);
+  }, [dataSource, fieldsOrColumns, papaparseConfig, fileName, selectedFields]);
 
   const handleCheckboxChange = React.useCallback(
     (key: string, checked: boolean) => {
@@ -205,7 +221,9 @@ export const ExportTableButton: React.FC<ExportFieldButtonProps> = (props) => {
                     handleCheckboxChange(key, e.target.checked)
                   }
                 >
-                  {typeof value === "string" ? value : value?.header ?? ""}
+                  {typeof value === "string" || typeof value === "number"
+                    ? value
+                    : value?.header ?? ""}
                 </Checkbox>
               );
             })}

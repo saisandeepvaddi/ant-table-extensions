@@ -14,12 +14,11 @@ const getGroupedColumnKeysFromChildren = <T,>(
   column: ColumnGroupType<T>,
   keys: Array<Fuse.FuseOptionKey<T>> = []
 ): Array<Fuse.FuseOptionKey<T>> => {
-  let newKeys: Array<Fuse.FuseOptionKey<T>> = [];
   for (const child of column.children) {
     const childColumn = child as ColumnGroupType<T>;
     if (childColumn.children && Array.isArray(childColumn.children)) {
       // If child has children, recurse
-      newKeys = getGroupedColumnKeysFromChildren(childColumn, keys);
+      keys = getGroupedColumnKeysFromChildren(childColumn, keys);
     } else {
       const childColumn = child as ColumnType<T>;
 
@@ -28,15 +27,15 @@ const getGroupedColumnKeysFromChildren = <T,>(
       }
 
       if (Array.isArray(childColumn.dataIndex)) {
-        newKeys = [...keys, childColumn.dataIndex.join(".")];
+        keys = [...keys, childColumn.dataIndex.join(".")];
         continue;
       }
 
-      newKeys = [...keys, childColumn.dataIndex as Fuse.FuseOptionKey<T>];
+      keys = [...keys, childColumn.dataIndex as Fuse.FuseOptionKey<T>];
     }
   }
 
-  return newKeys;
+  return keys;
 };
 
 const createDefaultFuseKeys = <T,>(
@@ -53,7 +52,7 @@ const createDefaultFuseKeys = <T,>(
           column as ColumnGroupType<T>,
           []
         );
-        return keys?.flat();
+        return (keys ?? []).flat();
       }
 
       const { dataIndex } = column as ColumnType<T>;
@@ -100,8 +99,10 @@ export function SearchTableInput<T extends object = DataSource>({
   const fuse = useRef<Fuse<T> | null>();
 
   const _fuseProps: Fuse.IFuseOptions<T> = React.useMemo(() => {
+    const _keys = createDefaultFuseKeys(dataSource, columns);
+
     return {
-      keys: createDefaultFuseKeys(dataSource, columns),
+      keys: _keys,
       threshold: fuzzySearch ? 0.6 : 0.1,
       shouldSort: false,
       ...fuseProps,

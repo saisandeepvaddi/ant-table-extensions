@@ -16,7 +16,7 @@ export type ExportColumnValue<T> = (
 ) => string | number;
 
 export interface ObjectColumnExporter<T> {
-  header: string;
+  header: string | number;
   formatter: ExportColumnValue<T>;
 }
 
@@ -51,7 +51,7 @@ export interface ExportFieldButtonProps<T = DataSource> {
   children?: ReactNode;
   /** Shows a modal to pick which columns to include exported file. Default: false */
   showColumnPicker?: boolean;
-  /** If true, all columns will be selected to export by default. Default: true */
+  /** If true, all columns will be selected to export by default including nested columns. Default: true */
   autoPickAllColumns?: boolean;
   /** Papaparse config */
   papaparseConfig?: UnparseConfig;
@@ -69,7 +69,7 @@ export interface TableProps<T> extends AntTableProps<T> {
 }
 
 export interface TableExportFields<T = DataSource> {
-  [dataIndex: string]: string | ObjectColumnExporter<T>;
+  [dataIndex: string | number]: string | number | ObjectColumnExporter<T>;
 }
 
 /**@deprecated Removed `I` prefix for interfaces. Use TableExportFields. */
