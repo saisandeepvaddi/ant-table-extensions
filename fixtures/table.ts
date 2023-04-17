@@ -10,7 +10,28 @@ export const columns = [
     title: "Last Name",
   },
   {
-    dataIndex: "country",
-    title: "Country",
+    title: "Address",
+    children: [
+      {
+        dataIndex: ["address", "street"],
+        title: "Street",
+      },
+      {
+        dataIndex: ["address", "city"],
+        title: "City",
+      },
+      {
+        dataIndex: ["address", "state"],
+        title: "State",
+      },
+      {
+        dataIndex: ["address", "zip"],
+        title: "Zip",
+      },
+      {
+        dataIndex: ["address", "country"],
+        title: "Country",
+      },
+    ],
   },
 ];
