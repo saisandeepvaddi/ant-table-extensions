@@ -90,6 +90,7 @@ export const ExportTableButton: React.FC<ExportFieldButtonProps> = (props) => {
     modalProps,
     columns = [],
     showColumnPicker = false,
+    papaparseConfig = {},
   } = props;
 
   const [showModal, setShowModal] = React.useState(false);
@@ -137,6 +138,7 @@ export const ExportTableButton: React.FC<ExportFieldButtonProps> = (props) => {
     const csv = unparse(data, {
       skipEmptyLines: "greedy",
       header: false,
+      ...papaparseConfig,
     });
     const blob = new Blob([csv]);
     const a = window.document.createElement("a");

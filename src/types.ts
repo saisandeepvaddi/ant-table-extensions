@@ -3,6 +3,7 @@ import { ColumnType as AntColumnType } from "antd/lib/table";
 import { TableProps as AntTableProps } from "antd/lib/table";
 import { ReactNode } from "react";
 import Fuse from "fuse.js";
+import { UnparseConfig } from "papaparse";
 
 export type DataSource = any;
 
@@ -52,6 +53,8 @@ export interface ExportFieldButtonProps<T = DataSource> {
   showColumnPicker?: boolean;
   /** If true, all columns will be selected to export by default. Default: true */
   autoPickAllColumns?: boolean;
+  /** Papaparse config */
+  papaparseConfig?: UnparseConfig;
 }
 
 export interface TableProps<T> extends AntTableProps<T> {
